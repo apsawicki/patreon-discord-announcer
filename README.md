@@ -28,19 +28,19 @@ PDA is an application that utilizes Discord as a notification platform to inform
 
 ## Bot Commands
 * Displays this list of commands in your Discord channel, can also be used to test if bot is currently online.  
-  > `/help`
+  > `!help`
 * Set the channel id the bot will announce posts in
-  > `/setchannel` 920036233038671953
+  > `!setchannel` 920036233038671953
 * Allows the user to select the creator page from patreon by copy and pasting the url after the command.  
-  > `/addlink` https://www.patreon.com/supermega
+  > `!addlink` https://www.patreon.com/supermega
 * Allows the user to remove a channel they no longer wish to recieve notifications from.  
-  > `/removelink` https://www.patreon.com/supermega  
+  > `!removelink` https://www.patreon.com/supermega  
 * View which links are currently being followed in the server.
-  > `/showlinks`  
+  > `!showlinks`  
 * Displays all current public posts, even if they have already been displayed.  
-  > `/getpublicposts`  
+  > `!getpublicposts`  
 * Displays all current private posts, even if they have already been displayed.  
-  > `/getprivateposts`  
+  > `!getprivateposts`  
 
 ## Building
 - **System Build Requirements**

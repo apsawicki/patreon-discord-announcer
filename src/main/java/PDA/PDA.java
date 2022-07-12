@@ -32,7 +32,7 @@ public class PDA {
 	/**
 	 * prefix is used to denote a command in a discord message
 	 */
-	public static String prefix = "/";
+	public static String prefix = "!";
 	/**
 	 * guildSet holds a HashSet of every discord server that is connected to the program
 	 */
