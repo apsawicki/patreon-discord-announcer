@@ -24,30 +24,12 @@ import java.util.regex.Pattern;
  */
 
 public class PDA {
-	// Global variables
-	/**
-	 * patreonUrls holds each of the patreon links mapped to each server that is using that patreon link
-	 */
+
 	public static HashMap<String, ArrayList<Guild>> patreonUrls = new HashMap<>();
-	/**
-	 * prefix is used to denote a command in a discord message
-	 */
 	public static String prefix = "!";
-	/**
-	 * guildSet holds a HashSet of every discord server that is connected to the program
-	 */
 	public static Set<Guild> guildSet = new HashSet<>();
-	/**
-	 * postCards holds each of the discord servers mapped to all the posts that each unique discord server has announced
-	 */
 	public static HashMap<Guild, LinkedList<PostCard>> postCards = new HashMap<>();
-	/**
-	 * discordToken holds the value of the discordToken provided to the program
-	 */
 	static String discordToken = "";
-	/**
-	 * log holds the reference to a {@link Logger} object to output clean messages to the console
-	 */
 	static Logger log;
 
 	/**
