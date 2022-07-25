@@ -400,13 +400,14 @@ public class PatreonThread extends Thread {
 			options.setHeadless(true);
 			options.setLogLevel(FirefoxDriverLogLevel.FATAL);
 
+			// TODO: something in this commented code makes the firefox driver filepath null when we get the driver with WebDriverManager
 			// Marionette is required to redirect Firefox's logging
-			options.setCapability(FirefoxDriver.Capability.MARIONETTE, "true");
-
-			// Set redirect location.  If OS is Windows based then "NUL:", otherwise "/dev/null"
-			String logLocation = SystemUtils.OS_NAME.startsWith("Windows") ? "NUL:" : "/dev/null";
-
-			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logLocation);
+//			options.setCapability(FirefoxDriver.Capability.MARIONETTE, "true");
+//
+//			// Set redirect location.  If OS is Windows based then "NUL:", otherwise "/dev/null"
+//			String logLocation = SystemUtils.OS_NAME.startsWith("Windows") ? "NUL:" : "/dev/null";
+//
+//			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logLocation);
 
 			// Create the driver
 			return WebDriverManager.firefoxdriver().capabilities(options).create();
