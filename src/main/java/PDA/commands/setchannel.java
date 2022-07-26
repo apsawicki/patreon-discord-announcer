@@ -1,6 +1,6 @@
 package PDA.commands;
 
-import PDA.DiscordBot;
+import PDA.discord.DiscordBot;
 
 /**
  * setchannel discord bot command.
@@ -14,18 +14,18 @@ import PDA.DiscordBot;
 
 public class setchannel extends GenericBotCommand {
 
-	/**
-	 * Sets the text channel for the unique discord that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
-	@Override
-	public void execute(DiscordBot bot) {
-		if (args.length <= 1) {
-			bot.send("No link provided", guild);
-		} else {
-			bot.addChannel(args[1], guild);
-			bot.send(args[1] + " has been set as the bot output channel", guild);
-		}
-	}
+//	/**
+//	 * Sets the text channel for the unique discord that issued the command
+//	 *
+//	 * @param bot holds the reference to the singular {@link DiscordBot} object
+//	 */
+//	@Override
+//	public void execute(DiscordBot bot) {
+//		if (args.length <= 1) {
+//			bot.send("No link provided", guild);
+//		} else {
+//			bot.addChannel(args[1], guild);
+//			bot.send(args[1] + " has been set as the bot output channel", guild);
+//		}
+//	}
 }

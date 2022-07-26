@@ -1,4 +1,4 @@
-package PDA;
+package PDA.patreon;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -67,7 +67,7 @@ public class PostCard {
 						urlContainer = urlContainer.replace("%2Fposts%2F", "/posts/");
 					}
 				}
-			} catch (NoSuchElementException e) { /* Ignore the exception */ }
+			} catch (NoSuchElementException ignored) { /* Ignore the exception */ }
 		}
 
 		this.url = urlContainer;
