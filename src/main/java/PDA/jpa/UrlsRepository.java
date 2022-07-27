@@ -40,6 +40,9 @@ public class UrlsRepository {
 
     @Transactional
     public void removeUrl(String guild, String url) { // good
+
+        // TODO: if not in db or already in database -- throw exception
+
         String sql = "delete from urls where guild = :guild and url = :url";
 
         em.createNativeQuery(sql, UrlBean.class)

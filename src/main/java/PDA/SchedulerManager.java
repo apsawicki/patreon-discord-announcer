@@ -3,25 +3,36 @@ package PDA;
 // TODO: get rid of wildcard imports everywhere (for some reason intelliJ setting didn't work)
 import PDA.beans.*;
 import PDA.jpa.*;
+import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.*;
+import java.nio.charset.*;
 import java.util.List;
 
 @Component
 public class SchedulerManager {
 
-    @Autowired
-    Channels channels;
+    @Scheduled(fixedRate = 1000000)
+    public void patreonThread() {
+
+
+    }
+
+    // TODO: below will go in test class (need to figure out how to test with database)
 
     @Autowired
-    Urls urls;
+    private Channels channels;
 
     @Autowired
-    Posts posts;
+    private Urls urls;
 
-    //1000 = 1sec
+    @Autowired
+    private Posts posts;
+
+    // 1000 = 1sec
     @Scheduled(fixedRate = 1000000)  // TODO: fixedRate should change to delayRate eventually
     public void channelTest() {
         System.out.println("channel");
@@ -41,6 +52,8 @@ public class SchedulerManager {
     public void urlTest() {
         System.out.println("url");
 
+        urls.removeUrl("340283948", "nope");
+
         List<UrlBean> ubList = urls.getAllUrls();
         System.out.println("ubList: " + ubList.size());
 
@@ -56,13 +69,6 @@ public class SchedulerManager {
     public void postTest() {
         System.out.println("post");
 
-        PostBean pb = new PostBean();
-        pb.setGuild("203948023984");
-        pb.setContent("content for alex");
-        pb.setUrl("my crazy cool custom url");
-
-        posts.putPost(pb);
-
         posts.removePost("3904823094", "my custom url");
 
         List<PostBean> pbList = posts.getAllPosts();
@@ -74,5 +80,6 @@ public class SchedulerManager {
             System.out.println("pb url_id: " + postBean.getContent() + "\n");
         }
     }
+
 
 }

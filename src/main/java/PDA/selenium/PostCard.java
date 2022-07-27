@@ -1,4 +1,4 @@
-package PDA.patreon;
+package PDA.selenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

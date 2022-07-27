@@ -3,19 +3,29 @@ package PDA.discord;
 // import PDA.DiscordBotJoin;
 
 import PDA.PDA;
+import PDA.beans.*;
+import PDA.jpa.*;
+import PDA.utils.*;
 import ch.qos.logback.classic.Logger;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.managers.channel.concrete.*;
+import net.dv8tion.jda.internal.entities.*;
+import net.dv8tion.jda.internal.managers.channel.concrete.*;
+import org.json.simple.parser.*;
+import org.json.simple.JSONObject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.commons.io.*;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.io.*;
+import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,42 +45,37 @@ import java.util.Set;
 @Scope("singleton")
 public class DiscordBot {
 
-//	private JDA jda;
-//	private final HashMap<Guild, EmbedBuilder> embedMap;
-//	private final HashMap<Guild, TextChannel> channels;
-//	public final Logger log;
+    public String prefix = "!";
+    public final Logger log;
+	private JDA jda;
+
+	@Autowired
+	Channels channels;
+
 //
-//	/**
-//	 * Constructor initializes instance variables, sets up the JDA bot, initializes each {@link EmbedBuilder} in embedMap, and initializes each {@link TextChannel} in channels
-//	 *
-//	 * @param token is the discord bot token that allows us to initialize a discord bot
-//	 *
-//	 * @throws InterruptedException in case a thread is interrupted
-//	 * @throws LoginException 		in case the login for the discord bot token doesn't work
-//	 */
-//	public DiscordBot() throws LoginException, InterruptedException {
-//		String token = "";
-//
-//		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
-//		this.log.info("Initializing Discord Bot...");
-//
+
+	public DiscordBot() throws LoginException, InterruptedException {
+
+		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
+		this.log.info("Initializing Discord Bot...");
+
 //		this.embedMap = new HashMap<>();
 //		this.channels = new HashMap<>();
-//
-//		//! setup JDA bot
-//		setupJDA(token);
-//
-//		//! setup all the embeds for each guild the bot is in
+
+		//! setup JDA bot
+		setupJDA(parseToken());
+
+
+		//! setup all the embeds for each guild the bot is in
 //		setupEmbeds();
-//
-//		//! setup all text channels per discord server
+
+		//! setup all text channels per discord server
 //		setupTextChannels();
-//
-//		//! setup the container for private and public posts so it's not null
+
+		//! setup the container for private and public posts so it's not null
 //		setupPosts();
-//
-//		this.log.info("Servers containing PDA: " + channels);
-//	}
+		this.log.info("Finished Discord Bot Initialization");
+	}
 //
 //	/**
 //	 * Sets the title for the unique discord server's {@link EmbedBuilder} in embedMap
@@ -141,25 +146,22 @@ public class DiscordBot {
 //		this.embedMap.put(id, this.embedMap.get(id).setFooter(text, userUrl));
 //	}
 //
-//	/**
-//	 * Will send the {@link EmbedBuilder}'s embed to the discord server specified in id
-//	 *
-//	 * @param id is the reference to the guild that we want to send the {@link EmbedBuilder} to
-//	 */
-//	public void send(Guild id) { // sending embed
-//		this.channels.get(id).sendMessageEmbeds(this.embedMap.get(id).build()).queue();
-//		this.embedMap.get(id).clear();
-//	}
-//
-//	/**
-//	 * Will send the text specified in the arguments to the discord server specified in the arguments
-//	 *
-//	 * @param text holds the String value of the message we want to send to a discord server
-//	 * @param id is the reference to the guild that we want to send the message to
-//	 */
-//	public synchronized void send(String text, Guild id) { // sending text
-//		this.channels.get(id).sendMessage(text).queue();
-//	}
+	// sending embed to Guild "id" discord server
+
+	public synchronized void send(MessageEmbed embed, Guild id) {
+		ChannelBean cb = channels.getChannel(id.getId());
+
+		TextChannel textChannel = new TextChannelImpl(Long.parseLong(cb.getChannelid()), (GuildImpl) id);
+		textChannel.sendMessageEmbeds(embed).queue();
+	}
+
+	// sending text to Guild "id" discord server
+	public synchronized void send(String text, Guild id) { // sending text
+		ChannelBean cb = channels.getChannel(id.getId());
+
+		TextChannel textChannel = new TextChannelImpl(Long.parseLong(cb.getChannelid()), (GuildImpl) id);
+		textChannel.sendMessage(text);
+	}
 //
 //	/**
 //	 * Will add a discord server and an empty {@link EmbedBuilder} object to the embedMap
@@ -188,24 +190,24 @@ public class DiscordBot {
 //		return this.jda;
 //	}
 //
-//	/**
-//	 * Initializes the jda object to allow us to talk with discord
-//	 *
-//	 * @param token holds the String token value that we need in order to initialize a discord bot through JDA
-//	 * @throws InterruptedException in case a thread is interrupted
-//	 */
-//	private void setupJDA(String token) throws InterruptedException {
-//		try {
-//			this.jda = JDABuilder.createDefault(token).build();
-//			this.jda.getPresence().setActivity(Activity.playing("Type /help"));
-//		} catch (LoginException e) {
-//			this.log.error("The given Discord Bot token '{}' is invalid!", token);
-//			System.exit(1);
-//		}
-//		this.jda.awaitReady();
-//		this.jda.addEventListener(new EventListener(this));
-//	}
-//
+	/**
+	 * Initializes the jda object to allow us to talk with discord
+	 *
+	 * @param token holds the String token value that we need in order to initialize a discord bot through JDA
+	 * @throws InterruptedException in case a thread is interrupted
+	 */
+	private void setupJDA(String token) throws InterruptedException {
+		try {
+			this.jda = JDABuilder.createDefault(token).build();
+			this.jda.getPresence().setActivity(Activity.playing("Type " + prefix + "help for commands"));
+		} catch (LoginException e) {
+			this.log.error("The given Discord Bot token '{}' is invalid!", token);
+			System.exit(1);
+		}
+		this.jda.awaitReady();
+		this.jda.addEventListener(new EventListener());
+	}
+
 //	/**
 //	 * Initializes an empty {@link EmbedBuilder} object for each discord server
 //	 */
@@ -217,7 +219,7 @@ public class DiscordBot {
 //			}
 //		}
 //	}
-//
+
 //	/**
 //	 * Initializes a TextChannel for each discord server by finding the first TextChannel in the discord server and adding it to the channels HashMap
 //	 */
@@ -234,7 +236,7 @@ public class DiscordBot {
 //				addChannel(chanList.get(0).getId(), guild);
 //		}
 //	}
-//
+
 //	/**
 //	 * Initializes an empty {@link LinkedList} container for {@link PostCard} objects and adds it to the postCards HashMap in PDA.java
 //	 */
@@ -246,4 +248,28 @@ public class DiscordBot {
 //			PDA.postCards.put(guild, temp);
 //		}
 //	}
+
+	private String parseToken() {
+		String jsonText;
+
+		try {
+			jsonText = IOUtils.toString(new FileInputStream("config.json"), StandardCharsets.UTF_8);
+		}
+		catch (IOException e) {
+			log.error("An error occurred while reading config.json", e);
+			return null;
+		}
+
+		JSONObject jsonToken;
+		try {
+			jsonToken = (JSONObject) new JSONParser().parse(jsonText);
+		}
+		catch (ParseException e) {
+			log.error("An error occurred while parsing JSON String into JSONObject", e);
+			return null;
+		}
+
+
+		return (String) jsonToken.get("TOKEN");
+	}
 }

@@ -1,6 +1,7 @@
 package PDA.commands;
 
 import PDA.PDA;
+import PDA.beans.*;
 import PDA.discord.DiscordBot;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -18,24 +19,34 @@ import java.util.ArrayList;
 
 public class addlink extends GenericBotCommand {
 
-//	/**
-//	 * Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
-//	 *
-//	 * @param bot holds the reference to the singular {@link DiscordBot} object
-//	 */
-//	@Override
-//	public void execute(DiscordBot bot) {
-//		if (args.length <= 1) {
-//			bot.send("No link provided", guild);
-//		} else {
-//
+	// Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
+	@Override
+	public void execute() {
+		if (args.length <= 1) {
+			bot.send("No link provided", guild);
+		} else {
+
 //			if (!PDA.urlValid(args[1])){
 //				bot.send(args[1] + " is not a valid link", guild);
 //				return;
 //			}
-//
+
 //			ArrayList<Guild> guilds;
-//
+
+            UrlBean ub = new UrlBean();
+            ub.setGuild(guild.getId());
+            ub.setUrl(args[1]);
+
+            try{ // TODO: throw exceptions when accessing database
+                urls.putUrl(ub);
+                bot.send(args[1] + " has been added to the list of links", guild);
+            }
+            catch (Exception e){
+                bot.send(args[1] + " was either not added or already in the list of links", guild);
+            }
+
+
+
 //			if (PDA.patreonUrls.containsKey(args[1])) {
 //				guilds = PDA.patreonUrls.get(args[1]);
 //
@@ -52,6 +63,6 @@ public class addlink extends GenericBotCommand {
 //				PDA.patreonUrls.put(args[1], guilds);
 //				bot.send(args[1] + " has been added to the list of links", guild);
 //			}
-//		}
-//	}
+		}
+	}
 }

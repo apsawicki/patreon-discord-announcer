@@ -1,29 +1,6 @@
-package PDA.patreon;
+package PDA.selenium;
 
 import PDA.discord.DiscordBot;
-import PDA.PDA;
-import PDA.utils.PostCardHelper;
-import ch.qos.logback.classic.Logger;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import net.dv8tion.jda.api.entities.Guild;
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.slf4j.LoggerFactory;
-
-import javax.imageio.ImageIO;
-import javax.xml.bind.DatatypeConverter;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.List;
-import java.util.*;
 
 /**
  * Selenium web scraping implementation.

@@ -13,17 +13,13 @@ import PDA.discord.DiscordBot;
 
 public class help extends GenericBotCommand {
 
-//	/**
-//	 * Prints out the list of commands available to be used by a user
-//	 *
-//	 * @param bot holds the reference to the singular {@link DiscordBot} object
-//	 */
-//	@Override
-//	public void execute(DiscordBot bot) {
-//		synchronized (bot){
-//			bot.setTitle("PDA Commands", null, guild);
-//			bot.setDescription("/help\n/setchannel\n/addlink\n/removelink\n/showlinks\n/getpublicposts\n/getprivateposts", guild);
-//			bot.send(guild);
-//		}
-//	}
+
+	// Prints out the list of commands available to be used by a user
+	@Override
+	public void execute() {
+		embed.setTitle("PDA Commands", null);
+		embed.setDescription("/help\n/setchannel\n/addlink\n/removelink\n/showlinks\n/getpublicposts\n/getprivateposts\n/changeprefix");
+
+		bot.send(embed.build(), guild);
+	}
 }

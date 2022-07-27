@@ -6,8 +6,8 @@ import PDA.PDA;
 public class changeprefix extends GenericBotCommand {
 
 
-//    @Override
-//    public void execute(DiscordBot bot) {
+    @Override
+    public void execute() {
 //        if (args.length <= 1){
 //            bot.send("no prefix provided", guild);
 //        }
@@ -16,5 +16,5 @@ public class changeprefix extends GenericBotCommand {
 //        }
 //
 //        PDA.prefix = args[1];
-//    }
+    }
 }

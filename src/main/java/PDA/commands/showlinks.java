@@ -14,13 +14,13 @@ import PDA.PDA;
 
 public class showlinks extends GenericBotCommand {
 
-//	/**
-//	 * Prints out the list of all links added to the discord server that issued the command
-//	 *
-//	 * @param bot holds the reference to the singular {@link DiscordBot} object
-//	 */
-//	@Override
-//	public void execute(DiscordBot bot) {
+	/**
+	 * Prints out the list of all links added to the discord server that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
+	@Override
+	public void execute() {
 //		StringBuilder linkContainer = new StringBuilder("");
 //
 //		for (String patreonUrl : PDA.patreonUrls.keySet()) {
@@ -36,5 +36,5 @@ public class showlinks extends GenericBotCommand {
 //			bot.setDescription(linkContainer.toString(), guild);
 //			bot.send(guild);
 //		}
-//	}
+	}
 }

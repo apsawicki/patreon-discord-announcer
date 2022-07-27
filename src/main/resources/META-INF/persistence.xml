@@ -3,5 +3,8 @@
     <persistence-unit name="pda">
         <class>PDA.beans.ChannelBean</class>
         <class>PDA.beans.UrlBean</class>
+        <class>PDA.discord.DiscordBot</class>
     </persistence-unit>
 </persistence>
+
+<!-- "META-INF\spring.factories" was deleted-->

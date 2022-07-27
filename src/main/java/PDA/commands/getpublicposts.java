@@ -11,13 +11,13 @@ package PDA.commands;
 
 public class getpublicposts extends GenericBotCommand {
 
-//	/**
-//	 * Prints out all public posts unique to the discord that issued the command
-//	 *
-//	 * @param bot holds the reference to the singular {@link DiscordBot} object
-//	 */
-//	@Override
-//	public void execute(DiscordBot bot) {
+	/**
+	 * Prints out all public posts unique to the discord that issued the command
+	 *
+	 * @param bot holds the reference to the singular {@link DiscordBot} object
+	 */
+	@Override
+	public void execute() {
 //		bot.setTitle("Public Posts:", null, guild);
 //		bot.send(guild);
 //
@@ -32,5 +32,5 @@ public class getpublicposts extends GenericBotCommand {
 //				bot.send(guild);
 //			}
 //		}
-//	}
+	}
 }
