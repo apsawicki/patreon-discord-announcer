@@ -9,27 +9,26 @@ import java.util.List;
 @Component
 public class Channels {
 
-   @Autowired ChannelsRepository channelsRepository;
+   @Autowired
+   ChannelsRepository channelsRepository;
 
-    public List<ChannelBean> getAllChannels(){
+    public List<ChannelBean> getAllChannels() { // good
         return channelsRepository.getAllChannels();
     }
 
-    public String getChannel(){
-
-        return null;
+    public ChannelBean getChannel(String guild){ // good
+        return channelsRepository.getChannel(guild);
     }
 
-    public void putChannel(){ // persist
-        ChannelBean cb = new ChannelBean();
-        cb.setChannelid("203894");
-        cb.setGuild("302039480298");
+    public void putChannel(ChannelBean cb){ // persist - good
         channelsRepository.putChannel(cb);
     }
 
-    public void updateChannel(){ // merge
-
+    public void updateChannelByGuild(ChannelBean cb){ // good
+        channelsRepository.updateChannel(cb);
     }
 
-
+    public void removeChannel(String guild) { // good
+        channelsRepository.removeChannel(guild);
+    }
 }

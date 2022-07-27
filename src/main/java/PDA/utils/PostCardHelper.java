@@ -1,15 +1,5 @@
 package PDA.utils;
 
-import PDA.patreon.PostCard;
-import ch.qos.logback.classic.Logger;
-import net.dv8tion.jda.api.entities.Guild;
-import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.LinkedList;
-
 public class PostCardHelper {
 
 //    private static final Logger log = (Logger) LoggerFactory.getLogger("PostCardHelper");

@@ -1,6 +1,11 @@
 package PDA.beans;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 @Table(name="urls")
@@ -16,9 +21,6 @@ public class UrlBean {
 
     @Column(name="url")
     protected String url;
-
-    @Column(name="channel_id")
-    protected int channel_id;
 
     public int getUrl_id() {
         return url_id;
@@ -42,13 +44,5 @@ public class UrlBean {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public int getChannel_id() {
-        return channel_id;
-    }
-
-    public void setChannel_id(int channel_id) {
-        this.channel_id = channel_id;
     }
 }

@@ -1,9 +1,5 @@
 package PDA.commands;
 
-import PDA.discord.DiscordBot;
-import PDA.PDA;
-import PDA.patreon.PostCard;
-
 /**
  * getprivateposts discord bot command.
  *

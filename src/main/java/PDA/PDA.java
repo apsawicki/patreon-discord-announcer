@@ -1,20 +1,5 @@
 package PDA;
 
-import PDA.discord.DiscordBot;
-import PDA.patreon.PatreonThread;
-import PDA.patreon.PostCard;
-import PDA.utils.JSONHelper;
-import ch.qos.logback.classic.Logger;
-import net.dv8tion.jda.api.entities.Guild;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
-
-import javax.security.auth.login.LoginException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Patreon Discord Announcer startup implementation.
  * <p>

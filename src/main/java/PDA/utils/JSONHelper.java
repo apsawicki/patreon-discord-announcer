@@ -1,17 +1,6 @@
 package PDA.utils;
 
-import PDA.PDA;
-import PDA.patreon.PostCard;
-import PDA.discord.DiscordBot;
 import ch.qos.logback.classic.Logger;
-import net.dv8tion.jda.api.entities.Guild;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class JSONHelper {
 	/**

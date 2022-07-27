@@ -15,36 +15,15 @@ import org.openqa.selenium.WebElement;
  */
 
 public class PostCard {
-	/**
-	 * publishDate will hold the date that the post was published
-	 */
+
 	private final String publishDate;
-
-	/**
-	 * title will hold the title of the post
-	 */
 	private final String title;
-
-	/**
-	 * url will hold the url of the post
-	 */
 	private final String url;
-
-	/**
-	 * content will hold the content of the post in String form
-	 */
 	private final String content;
-
-	/**
-	 * isPrivate will hold a boolean value that will tell us if the specific post is public or private
-	 */
 	private final boolean isPrivate;
 
-	/**
-	 * Constructor initializes instance variables, checking if the post is private and setting the boolean respectively, gets and cleans up the url of the specific post.
-	 *
-	 * @param postCard is the WebElement of the post found while web scraping with selenium.
-	 */
+
+	 // Constructor initializes instance variables, checking if the post is private and setting the boolean respectively, gets and cleans up the url of the specific post.
 	public PostCard(WebElement postCard) {
 		this.isPrivate = !getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A");
 		this.publishDate = getTagText(postCard, By.cssSelector("[data-tag='post-published-at']"));
@@ -73,15 +52,7 @@ public class PostCard {
 		this.url = urlContainer;
 	}
 
-	/**
-	 * Constructor for json-loaded posts
-	 *
-	 * @param publishDate date the post was published
-	 * @param title title of the post
-	 * @param url url of the post
-	 * @param content content of the post
-	 * @param isPrivate whether the post was private or not
-	 */
+	// Constructor for json-loaded posts
 	public PostCard(String publishDate, String title, String url, String content, boolean isPrivate) {
 		this.publishDate = publishDate;
 		this.title = title;
@@ -90,47 +61,22 @@ public class PostCard {
 		this.isPrivate = isPrivate;
 	}
 
-	/**
-	 * Gets the published date and time of the {@link PostCard}
-	 *
-	 * @return date and time to this object's post
-	 */
 	public String getPublishDate() {
 		return this.publishDate;
 	}
 
-	/**
-	 * Gets the title of the {@link PostCard}
-	 *
-	 * @return title to this object's post
-	 */
 	public String getTitle() {
 		return this.title;
 	}
 
-	/**
-	 * Gets the direct URL/link of the {@link PostCard}
-	 *
-	 * @return URL to this object's post
-	 */
 	public String getUrl() {
 		return this.url;
 	}
 
-	/**
-	 * Gets the content/text of the {@link PostCard}
-	 *
-	 * @return content to this object's post
-	 */
 	public String getContent() {
 		return this.content;
 	}
 
-	/**
-	 * Checks to see if this is a private {@link PostCard}
-	 *
-	 * @return true if it is private, false otherwise
-	 */
 	public boolean isPrivate() {
 		return this.isPrivate;
 	}
@@ -150,12 +96,7 @@ public class PostCard {
 		}
 	}
 
-	/**
-	 * Checks if two different PostCard objects are equal
-	 *
-	 * @param o is an Object and will be used to check if they are the same object
-	 * @return true if the two objects are equal, false otherwise
-	 */
+
 	@Override
 	public boolean equals(Object o) {
 		// If the object is being compared with itself then return true
@@ -170,11 +111,7 @@ public class PostCard {
 		return this.url.equals(((PostCard) o).getUrl());
 	}
 
-	/**
-	 * Returns a string containing all the information in {@link PostCard}
-	 *
-	 * @return String of all the information contained in {@link PostCard}
-	 */
+
 	@Override
 	public String toString() {
 		return "Title: " + this.getTitle()

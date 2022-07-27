@@ -1,9 +1,53 @@
 package PDA.jpa;
 
+import PDA.beans.PostBean;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
 
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+@Repository
 public class PostsRepository {
 
+    @PersistenceContext
+    private EntityManager em;
 
+    @Transactional(readOnly = true)
+    public List<PostBean> getAllPosts() { // good
+        String sql = "select * from posts";
 
+        Query q = em.createNativeQuery(sql, PostBean.class);
+
+        return q.getResultList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostBean> getGuildPosts(String guild) { // good
+        String sql = "select * from posts where guild = :guild";
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("guild", guild);
+
+        return q.getResultList();
+    }
+
+    @Transactional
+    public void putPost(PostBean pb) { // good
+        em.persist(pb);
+    }
+
+    @Transactional
+    public void removePost(String guild, String url) { // good
+        String sql = "delete from posts where guild = :guild and url = :url";
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("guild", guild);
+        q.setParameter("url", url);
+
+        q.executeUpdate();
+    }
 }
