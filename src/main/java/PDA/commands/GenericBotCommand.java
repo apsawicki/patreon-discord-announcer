@@ -23,7 +23,7 @@ public abstract class GenericBotCommand implements BotCommand {
     // guild holds the reference to the discord server that we will output the command's output to
 	protected Guild guild = null;
 
-    // embed builder so each command can create an embed for it's own use
+    // embed builder so each command can create its own embed
     protected EmbedBuilder embed = new EmbedBuilder();
 
 	@Autowired
@@ -31,6 +31,12 @@ public abstract class GenericBotCommand implements BotCommand {
 
 	@Autowired
 	Urls urls;
+
+	@Autowired
+	Channels channels;
+
+	@Autowired
+	Posts posts;
 
 	// Abstract so each bot command will implement it their own way, execute() will be where each bot command differs in implementation
 	@Override

@@ -1,5 +1,6 @@
 package PDA.commands;
 
+import PDA.beans.*;
 import PDA.discord.DiscordBot;
 
 /**
@@ -14,18 +15,19 @@ import PDA.discord.DiscordBot;
 
 public class setchannel extends GenericBotCommand {
 
-	/**
-	 * Sets the text channel for the unique discord that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	// Sets the text channel for the unique discord that issued the command
 	@Override
 	public void execute() {
-//		if (args.length <= 1) {
-//			bot.send("No link provided", guild);
-//		} else {
-//			bot.addChannel(args[1], guild);
-//			bot.send(args[1] + " has been set as the bot output channel", guild);
-//		}
+		if (args.length <= 1) {
+			bot.send("No link provided", guild);
+		} else {
+
+			ChannelBean cb = new ChannelBean();
+			cb.setGuild(guild.getId());
+			cb.setChannelid(args[1]);
+
+			channels.updateChannelByGuild(cb); // TODO: throw error based on if the channel is already set or somethign went wrong
+			bot.send(args[1] + " has been set as the bot output channel", guild);
+		}
 	}
 }

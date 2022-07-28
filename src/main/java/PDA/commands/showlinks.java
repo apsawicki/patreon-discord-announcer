@@ -1,7 +1,10 @@
 package PDA.commands;
 
+import PDA.beans.*;
 import PDA.discord.DiscordBot;
 import PDA.PDA;
+
+import java.util.*;
 
 /**
  * showlinks discord bot command.
@@ -14,27 +17,28 @@ import PDA.PDA;
 
 public class showlinks extends GenericBotCommand {
 
-	/**
-	 * Prints out the list of all links added to the discord server that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	// Prints out the list of all links added to the discord server that issued the command
 	@Override
 	public void execute() {
-//		StringBuilder linkContainer = new StringBuilder("");
-//
+		StringBuilder linkContainer = new StringBuilder("");
+
+		List<UrlBean> ubList = urls.getGuildUrls(guild.getId());
+
+		for (UrlBean url : ubList){
+			linkContainer.append(url.getUrl()).append("\n");
+		}
+
 //		for (String patreonUrl : PDA.patreonUrls.keySet()) {
 //			if (PDA.patreonUrls.get(patreonUrl).contains(guild)) {
 //				linkContainer.append(patreonUrl).append("\n");
 //			}
 //		}
-//		if (linkContainer.length() == 0)
-//			linkContainer.append("no links added");
-//
-//		synchronized (bot){
-//			bot.setTitle("Links", "", guild);
-//			bot.setDescription(linkContainer.toString(), guild);
-//			bot.send(guild);
-//		}
+		if (linkContainer.length() == 0)
+			linkContainer.append("no links added");
+
+		embed.setTitle("Links", "");
+		embed.setDescription(linkContainer.toString());
+
+		bot.send(embed.build(), guild);
 	}
 }

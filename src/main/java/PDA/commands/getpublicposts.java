@@ -1,5 +1,7 @@
 package PDA.commands;
 
+import PDA.beans.*;
+
 /**
  * getpublicposts discord bot command.
  *
@@ -11,26 +13,21 @@ package PDA.commands;
 
 public class getpublicposts extends GenericBotCommand {
 
-	/**
-	 * Prints out all public posts unique to the discord that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	// Prints out all public posts unique to the discord that issued the command
 	@Override
 	public void execute() {
-//		bot.setTitle("Public Posts:", null, guild);
-//		bot.send(guild);
-//
-//		for (PostCard currentPostCard : PDA.postCards.get(guild)) {
-//			if (currentPostCard.isPrivate())
-//				continue;
-//
-//			synchronized (bot){
-//				bot.setTitle(currentPostCard.getTitle(), null, guild);
-//				bot.setDescription(currentPostCard.getContent(), guild);
-//				bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
-//				bot.send(guild);
-//			}
-//		}
+		embed.setTitle("Public Posts: ", null); // TODO: ask for user input on specific patreon public posts
+
+		bot.send(embed.build(), guild);
+
+		for (PostBean post : posts.getGuildPosts(guild.getId())) {
+			if (post.isPrivate())
+				continue;
+
+			embed.setTitle(post.getTitle(), null);
+			embed.setDescription(post.getContent());
+			embed.setFooter(post.getPublishDate(), post.getUrl());
+			bot.send(embed.build(), guild);
+		}
 	}
 }
