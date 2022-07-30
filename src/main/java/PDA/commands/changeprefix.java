@@ -1,10 +1,16 @@
 package PDA.commands;
 
+import PDA.discord.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
+@Component
 public class changeprefix extends GenericBotCommand {
 
+    @Autowired
+    private DiscordBot bot;
 
-    @Override
+//    @Override
     public void execute() {
         if (args.length <= 1){
             bot.send("no prefix provided", guild);

@@ -2,12 +2,15 @@ package PDA;
 
 // TODO: get rid of wildcard imports everywhere (for some reason intelliJ setting didn't work)
 import PDA.beans.*;
+import PDA.discord.*;
 import PDA.jpa.*;
+import PDA.selenium.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.*;
 import java.io.*;
 import java.nio.charset.*;
 import java.util.List;
@@ -15,13 +18,24 @@ import java.util.List;
 @Component
 public class SchedulerManager {
 
-    @Scheduled(fixedRate = 1000000)
-    public void patreonThread() {
+    @Autowired
+    PatreonThread patreonThread;
 
+    @Autowired
+    DiscordBot bot;
 
+    @PostConstruct
+    public void confirmChannels(){
+        bot.confirmChannels();
     }
 
-    // TODO: below will go in test class (need to figure out how to test with database)
+    @Scheduled(fixedDelay = 1000000)
+    public void patreonThread() {
+        patreonThread.run();
+    }
+
+//    // TODO: below will go in test class (need to figure out how to test with database)
+/*
 
     @Autowired
     private Channels channels;
@@ -52,8 +66,6 @@ public class SchedulerManager {
     public void urlTest() {
         System.out.println("url");
 
-        urls.removeUrl("340283948", "nope");
-
         List<UrlBean> ubList = urls.getAllUrls();
         System.out.println("ubList: " + ubList.size());
 
@@ -69,8 +81,6 @@ public class SchedulerManager {
     public void postTest() {
         System.out.println("post");
 
-        posts.removePost("3904823094", "my custom url");
-
         List<PostBean> pbList = posts.getAllPosts();
         System.out.println("pbList: " + pbList.size());
 
@@ -80,6 +90,7 @@ public class SchedulerManager {
             System.out.println("pb url_id: " + postBean.getContent() + "\n");
         }
     }
+*/
 
 
 }

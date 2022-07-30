@@ -1,6 +1,54 @@
 package PDA.utils;
 
-public class PostCardHelper {
+import PDA.beans.*;
+import org.openqa.selenium.*;
+
+public class PostBeanHelper {
+
+    public static PostBean createPostBean(WebElement postCard) {
+        PostBean pb = new PostBean();
+        pb.setPrivate(!getTagText(postCard, By.cssSelector("[data-tag='locked-rich-text-post']")).equals("N/A"));
+        pb.setPublishDate(getTagText(postCard, By.cssSelector("[data-tag='post-published-at']")));
+        pb.setTitle(getTagText(postCard, By.cssSelector("[data-tag='post-title']")));
+        pb.setContent(getTagText(postCard, By.cssSelector("[data-tag='post-content']")));
+
+        String urlContainer = "N/A";
+
+        // If the title exists then set the URL to the title's anchor href link, otherwise it's also N/A
+        if (!pb.getTitle().equals("N/A")) {
+            try {
+                urlContainer = postCard.findElement(By.cssSelector("[data-tag='post-title']")).findElement(By.tagName("a")).getAttribute("href");
+
+                // If the post is private then clean the URL of any possible junk that may tarnish it and lead us to a login page
+                if (pb.isPrivate()) {
+                    int corruptLinkIndex = urlContainer.indexOf("https%3A%2F%2F");
+
+                    if (corruptLinkIndex != -1) {
+                        urlContainer = "https://" + urlContainer.substring(corruptLinkIndex + 14);
+                        urlContainer = urlContainer.replace("%2Fposts%2F", "/posts/");
+                    }
+                }
+            } catch (NoSuchElementException ignored) { /* Ignore the exception */ }
+        }
+        pb.setUrl(urlContainer);
+
+        return pb;
+    }
+
+    /**
+     * Gets the test of the given tag of a WebElement
+     *
+     * @param selector is the tag selector that is specified to find specific text
+     * @param postCard is the WebElement we are going to be parsing to find specified text
+     * @return String holding the text found, or "N/A" if no text was found
+     */
+    private static String getTagText(WebElement postCard, By selector) {
+        try {
+            return postCard.findElement(selector).getText();
+        } catch (NoSuchElementException e) {
+            return "N/A";
+        }
+    }
 
 //    private static final Logger log = (Logger) LoggerFactory.getLogger("PostCardHelper");
 //

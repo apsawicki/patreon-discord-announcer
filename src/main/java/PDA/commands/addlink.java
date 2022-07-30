@@ -1,11 +1,10 @@
 package PDA.commands;
 
-import PDA.PDA;
 import PDA.beans.*;
-import PDA.discord.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
-
-import java.util.ArrayList;
+import PDA.discord.*;
+import PDA.jpa.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
 /**
  * addlink discord bot command.
@@ -17,10 +16,17 @@ import java.util.ArrayList;
  * 3) Add the guild to the list of guilds associated with the particular link
  */
 
+//@Component
 public class addlink extends GenericBotCommand {
 
+    @Autowired
+    private DiscordBot bot;
+
+    @Autowired
+    private Urls urls;
+
 	// Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
-	@Override
+//	@Override
 	public void execute() {
 		if (args.length <= 1) {
 			bot.send("No link provided", guild);

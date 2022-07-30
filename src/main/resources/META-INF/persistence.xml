@@ -4,6 +4,9 @@
         <class>PDA.beans.ChannelBean</class>
         <class>PDA.beans.UrlBean</class>
         <class>PDA.discord.DiscordBot</class>
+        <class>PDA.SchedulerManager</class>
+        <class>PDA.selenium.PatreonThread</class>
+        <class>PDA.commands.GenericBotCommand</class>
     </persistence-unit>
 </persistence>
 

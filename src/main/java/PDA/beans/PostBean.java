@@ -1,5 +1,7 @@
 package PDA.beans;
 
+import PDA.selenium.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -84,5 +86,19 @@ public class PostBean {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // If the object is being compared with itself then return true
+        if (o == this)
+            return true;
+
+        // If the object is not a PostCard object then return false
+        if (!(o instanceof PostBean))
+            return false;
+
+        // If the object and this PostCard have the same URL then return true
+        return this.url.equals(((PostBean) o).getUrl());
     }
 }
