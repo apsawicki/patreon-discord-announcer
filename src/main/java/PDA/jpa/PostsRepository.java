@@ -16,6 +16,17 @@ public class PostsRepository {
     @PersistenceContext
     private EntityManager em;
 
+    @Transactional
+    public PostBean getPost(PostBean pb) {
+        String sql = "select * from posts where guild = :guild and url = :url";
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("guild", pb.getGuild());
+        q.setParameter("url", pb.getUrl());
+
+        return (PostBean) q.getResultList().get(0);
+    }
+
     @Transactional(readOnly = true)
     public List<PostBean> getAllPosts() { // good
         String sql = "select * from posts";

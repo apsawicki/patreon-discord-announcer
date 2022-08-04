@@ -1,12 +1,6 @@
 package PDA.commands;
 
 import PDA.beans.*;
-import PDA.discord.*;
-import PDA.jpa.*;
-import net.dv8tion.jda.api.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.annotation.*;
-import org.springframework.stereotype.*;
 
 import java.util.*;
 
@@ -19,22 +13,15 @@ import java.util.*;
  * 2) Send an embed holding the list of patreon links that the discord server is currently tracking
  */
 
-@Component
-@Scope("prototype")
-public class showlinks extends TestGenericCommand {
-
-	@Autowired
-	private Urls urls;
+public class showlinks extends GenericBotCommand {
 
 	// Prints out the list of all links added to the discord server that issued the command
-	public EmbedBuilder execute() {
-		System.out.println("1");
+	@Override
+	public void execute() {
 		StringBuilder linkContainer = new StringBuilder("");
 
-		System.out.println("2");
 		List<UrlBean> ubList = urls.getGuildUrls(guild.getId());
 
-		System.out.println("3");
 		for (UrlBean url : ubList){
 			linkContainer.append(url.getUrl()).append("\n");
 		}
@@ -50,6 +37,6 @@ public class showlinks extends TestGenericCommand {
 		embed.setTitle("Links", "");
 		embed.setDescription(linkContainer.toString());
 
-		return embed;
+		bot.send(embed.build(), guild);
 	}
 }

@@ -1,10 +1,5 @@
 package PDA.commands;
 
-import PDA.discord.*;
-import PDA.jpa.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-
 /**
  * removelink discord bot command.
  * <p>
@@ -15,17 +10,10 @@ import org.springframework.stereotype.*;
  * 3) Remove the guild from the list of guilds associated with the particular link
  */
 
-@Component
 public class removelink extends GenericBotCommand {
 
-	@Autowired
-	private DiscordBot bot;
-
-	@Autowired
-	private Urls urls;
-
 	// Removes the discord server from the list of discord servers assigned to the patreon link given by the user
-//	@Override
+	@Override
 	public void execute() {
 		if (args.length <= 1) {
 			bot.send("No link provided", guild);

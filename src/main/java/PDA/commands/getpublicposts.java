@@ -1,10 +1,6 @@
 package PDA.commands;
 
 import PDA.beans.*;
-import PDA.discord.*;
-import PDA.jpa.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
 
 /**
  * getpublicposts discord bot command.
@@ -15,17 +11,10 @@ import org.springframework.stereotype.*;
  *
  */
 
-@Component
 public class getpublicposts extends GenericBotCommand {
 
-	@Autowired
-	private DiscordBot bot;
-
-	@Autowired
-	private Posts posts;
-
 	// Prints out all public posts unique to the discord that issued the command
-//	@Override
+	@Override
 	public void execute() {
 		embed.setTitle("Public Posts: ", null); // TODO: ask for user input on specific patreon public posts
 

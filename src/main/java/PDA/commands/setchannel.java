@@ -2,9 +2,6 @@ package PDA.commands;
 
 import PDA.beans.*;
 import PDA.discord.DiscordBot;
-import PDA.jpa.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
 
 /**
  * setchannel discord bot command.
@@ -16,17 +13,10 @@ import org.springframework.stereotype.*;
  * 3) Set the text channel where the discord bot outputs depending on what text channel ID was provided
  */
 
-@Component
 public class setchannel extends GenericBotCommand {
 
-	@Autowired
-	private DiscordBot bot;
-
-	@Autowired
-	private Channels channels;
-
 	// Sets the text channel for the unique discord that issued the command
-//	@Override
+	@Override
 	public void execute() {
 		if (args.length <= 1) {
 			bot.send("No link provided", guild);

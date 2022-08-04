@@ -1,7 +1,6 @@
 package PDA.commands;
 
 import PDA.discord.DiscordBot;
-import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Guild;
 
 /**
@@ -11,7 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 public interface BotCommand {
 
 	// execute the bot command
-	EmbedBuilder execute();
+	void execute();
 
 	// set the arguments for the bot command
 	void setArgs(String[] args);

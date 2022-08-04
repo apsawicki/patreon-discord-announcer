@@ -12,6 +12,10 @@ public class Posts {
     @Autowired
     PostsRepository postsRepository;
 
+    public PostBean getPost(PostBean pb) {
+        return postsRepository.getPost(pb);
+    }
+
     public List<PostBean> getAllPosts() {
         return postsRepository.getAllPosts();
     }

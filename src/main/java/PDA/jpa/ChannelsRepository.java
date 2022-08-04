@@ -23,6 +23,7 @@ public class ChannelsRepository{
         return q.getResultList();
     }
 
+    @Transactional
     public ChannelBean getChannel(String guild) {
         String sql = "select * from channels where guild = :guild";
 
