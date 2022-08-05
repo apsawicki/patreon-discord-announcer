@@ -8,6 +8,7 @@ import PDA.jpa.Channels;
 import PDA.jpa.Posts;
 import PDA.jpa.Urls;
 import PDA.utils.PostBeanHelper;
+
 import ch.qos.logback.classic.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

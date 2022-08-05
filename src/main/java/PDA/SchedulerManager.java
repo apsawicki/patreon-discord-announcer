@@ -1,17 +1,9 @@
 package PDA;
 
-// TODO: get rid of wildcard imports everywhere (for some reason intelliJ setting didn't work)
-import PDA.beans.*;
-import PDA.jpa.*;
 import PDA.selenium.PatreonThread;
-import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.io.*;
-import java.nio.charset.*;
-import java.util.List;
 
 @Component
 public class SchedulerManager {

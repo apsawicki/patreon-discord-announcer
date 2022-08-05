@@ -3,7 +3,7 @@ package PDA.jpa;
 import PDA.beans.UrlBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 

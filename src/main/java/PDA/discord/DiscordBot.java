@@ -2,24 +2,16 @@ package PDA.discord;
 
 // import PDA.DiscordBotJoin;
 
-import PDA.beans.*;
-import PDA.jpa.*;
+import PDA.beans.ChannelBean;
+import PDA.jpa.Channels;
 import ch.qos.logback.classic.Logger;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.internal.entities.*;
-import org.json.simple.parser.*;
-import org.json.simple.JSONObject;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import org.apache.commons.io.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import javax.security.auth.login.LoginException;
-import java.io.*;
-import java.nio.charset.*;
 
 /**
  * Implementation of the JDA discord bot API.
