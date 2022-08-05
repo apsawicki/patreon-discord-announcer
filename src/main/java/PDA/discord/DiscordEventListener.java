@@ -1,9 +1,16 @@
 package PDA.discord;
 
+import PDA.beans.ChannelBean;
 import PDA.commands.*;
+import PDA.jpa.Channels;
+import PDA.jpa.Posts;
+import PDA.jpa.Urls;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.*;
 
 /**
@@ -22,14 +29,19 @@ import org.springframework.stereotype.*;
 public class DiscordEventListener extends ListenerAdapter {
 
 	private String prefix = "!"; // TODO: add prefix to db to make server specific prefix
-	CommandFactory commandFactory;
 
-	@Autowired
+	private CommandFactory commandFactory;
+	@Autowired private Channels channels;
+	@Autowired private Posts posts;
+	@Autowired private Urls urls;
+
+	@Autowired // field injection autowiring on CommandFactory returns null instead of instantiated object
 	public DiscordEventListener(CommandFactory commandFactory) {
 		this.commandFactory = commandFactory;
 	}
 
-	// Runs everytime a message is sent in a discord server, will initialize a {@link BotCommand} object if the message contains a command
+	// Runs everytime a message is sent in a discord server
+	@EventListener
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -56,7 +68,6 @@ public class DiscordEventListener extends ListenerAdapter {
 			return;
 		}
 
-
 		// prepare and execute the command
 		command.setGuildID(event.getGuild());
 		command.setArgs(args);
@@ -65,27 +76,22 @@ public class DiscordEventListener extends ListenerAdapter {
 		System.out.println("finished");
 	}
 
+	// Runs everytime the discord bot is added to a server during program runtime
+	@Override
+	public void onGuildJoin(GuildJoinEvent event) {
+		ChannelBean cb = new ChannelBean();
+		cb.setGuild(event.getGuild().getId());
+		cb.setChannelid(event.getGuild().getChannels().get(0).getId());
 
-//
-//	/**
-//	 * Runs everytime the discord bot is added to a server during program runtime, will add the server information to allow for the program to run correctly
-//	 *
-//	 * @param event is the container for the message that was sent and all if it's information
-//	 */
-//	@Override
-//	public void onGuildJoin(@NotNull GuildJoinEvent event) {
-//		// Adding to guild list/set
-//
-//		bot.log.info("Added server '{}' to guild list.", event.getGuild().getName());
-//		bot.addGuild(event.getGuild());
-//		PDA.guildSet.add(event.getGuild());
-//
-//		// Adding channel
-//		bot.addChannel(event.getGuild().getTextChannels().get(0).getId(), event.getGuild());
-//
-//		// Adding to private/public posts container
-//		LinkedList<PostCard> temp = new LinkedList<>();
-//		PDA.postCards.put(event.getGuild(), temp);
-//	}
+		channels.putChannel(cb);
+	}
+
+	// Runs everytime the discord bot leaves a server during runtime
+	@Override
+	public void onGuildLeave(GuildLeaveEvent event) {
+		channels.removeChannel(event.getGuild().getId());
+		posts.removeGuildPosts(event.getGuild().getId());
+		urls.removeGuildUrls(event.getGuild().getId());
+	}
 }
 

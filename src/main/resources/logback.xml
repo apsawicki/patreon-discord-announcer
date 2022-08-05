@@ -6,8 +6,8 @@
         </encoder>
     </appender>
 
-    <logger name="net.dv8tion.jda.api.JDA" level="OFF"/>
-    <logger name="org.openqa.selenium.remote.ProtocolHandshake" level="OFF"/>
+    <logger name="net.dv8tion.jda.api.JDA" level="INFO"/>
+    <logger name="org.openqa.selenium.remote.ProtocolHandshake" level="INFO"/>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * 2) Check if the link is already in the list of links
  * 3) Add the guild to the list of guilds associated with the particular link
  */
-
+// TODO: after add link, add all current posts to db without posting
 @Component
 public class addlink extends AbstractCommand {
 

@@ -36,18 +36,18 @@ import java.nio.charset.*;
 public class DiscordBot {
 
 
-    public final Logger log;
+    private final Logger log;
 
 	@Autowired
 	private JDA jda;
 
 	@Autowired
-	Channels channels;
+	private Channels channels;
 
 
-	public DiscordBot() {
-		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
-		this.log.info("Finished Discord Bot Initialization");
+	public DiscordBot() { // TODO: check guilds currently on the jda -- handle
+		log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
+		log.info("Finished Discord Bot Initialization");
 	}
 
 	// sending embed to Guild "id" discord server

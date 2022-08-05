@@ -29,4 +29,5 @@ public class Urls {
         urlsRepository.removeUrl(guild, url);
     }
 
+    public void removeGuildUrls(String guild) { urlsRepository.removeGuildUrls(guild);}
 }

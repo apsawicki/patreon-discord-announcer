@@ -28,9 +28,9 @@ public class Posts {
         postsRepository.putPost(pb);
     }
 
+    public void removeGuildPosts(String guild) { postsRepository.removeGuildPosts(guild);}
+
     public void removePost(String guild, String url) {
         postsRepository.removePost(guild, url);
     }
-
-
 }

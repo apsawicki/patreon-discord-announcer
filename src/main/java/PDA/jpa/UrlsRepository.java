@@ -45,12 +45,22 @@ public class UrlsRepository {
 
         String sql = "delete from urls where guild = :guild and url = :url";
 
-        em.createNativeQuery(sql, UrlBean.class)
-                .setParameter("url", url)
-                .setParameter("guild", guild)
-                .executeUpdate();
+        Query q = em.createNativeQuery(sql, UrlBean.class);
+        q.setParameter("url", url);
+        q.setParameter("guild", guild);
+
+        q.executeUpdate();
     }
 
+    @Transactional
+    public void removeGuildUrls(String guild) {
+        String sql = "delete from urls where guild = :guild";
+
+        Query q = em.createNativeQuery(sql, UrlBean.class);
+        q.setParameter("guild", guild);
+
+        q.executeUpdate();
+    }
 
     // TODO: exists() helper class (maybe not helper in the future?)
 }

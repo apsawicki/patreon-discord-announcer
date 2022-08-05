@@ -52,6 +52,16 @@ public class PostsRepository {
     }
 
     @Transactional
+    public void removeGuildPosts(String guild) {
+        String sql = "delete from posts where guild = :guild";
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("guild", guild);
+
+        q.executeUpdate();
+    }
+
+    @Transactional
     public void removePost(String guild, String url) { // good
         String sql = "delete from posts where guild = :guild and url = :url";
 
