@@ -1,8 +1,9 @@
 package PDA.commands;
 
+import org.springframework.stereotype.Component;
 
-public class changeprefix extends GenericBotCommand {
-
+@Component
+public class changeprefix extends AbstractCommand {
 
     @Override
     public void execute() {
@@ -11,13 +12,13 @@ public class changeprefix extends GenericBotCommand {
         String prefix = "";
 
         if (args.length <= 1){
-            bot.send("no prefix provided", guild);
+            send("no prefix provided");
         }
         else if (args[0].length() > 10){
-            bot.send("no prefix with length greater than 10 characters allowed", guild);
+            send("no prefix with length greater than 10 characters allowed");
         }
 
         prefix = args[1];
-        bot.send("\"" + args[1] + "\"" + " has been set as the command prefix", guild);
+        send("\"" + args[1] + "\"" + " has been set as the command prefix");
     }
 }

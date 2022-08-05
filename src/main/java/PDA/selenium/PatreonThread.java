@@ -107,7 +107,9 @@ public class PatreonThread {
 					goToPatreonPage(driver, url);
 				}
 				catch (InvalidArgumentException e) {
+					urls.removeUrl(guild, url);
 					this.log.warn("URL '{}' was removed from the list of links from guild '{}'", url, guild);
+					continue;
 				}
 
 				if (this.visibleElementFound(postCardSelector)) {

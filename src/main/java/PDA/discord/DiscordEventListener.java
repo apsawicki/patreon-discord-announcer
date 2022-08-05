@@ -4,9 +4,6 @@ import PDA.commands.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.*;
 
 /**
@@ -24,7 +21,7 @@ import org.springframework.stereotype.*;
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
-	private String prefix = "!";
+	private String prefix = "!"; // TODO: add prefix to db to make server specific prefix
 	CommandFactory commandFactory;
 
 	@Autowired
@@ -35,6 +32,11 @@ public class DiscordEventListener extends ListenerAdapter {
 	// Runs everytime a message is sent in a discord server, will initialize a {@link BotCommand} object if the message contains a command
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
+
+		if (event.getAuthor().isBot()) { // TODO: fix getting message received event from self
+			return;
+		}
+
 		System.out.println("message received");
 		String[] args = event.getMessage().getContentRaw().split("\\s+"); // changing each word in a message to arguments separated by spaces
 
@@ -44,11 +46,10 @@ public class DiscordEventListener extends ListenerAdapter {
 		if (args.length == 0 || args[0].length() < prefixLength + 3)
 			return;
 
-		TestGenericCommand command;
+		AbstractCommand command;
 
-		// use Class.forName to generate a new class with the given arguments, cutting out the prefix and case sensitivity.
 		try {
-			command = commandFactory.getCommand("PDA.commands.help");
+			command = commandFactory.getCommand("PDA.commands." + args[0].substring(prefixLength).toLowerCase());
 		} catch (Exception e) {
 			// Ignore any exceptions as we don't care if someone puts an invalid command name
 			e.printStackTrace();
@@ -56,10 +57,11 @@ public class DiscordEventListener extends ListenerAdapter {
 		}
 
 
-		// command variable should never be null as we will never reach here if it is null
+		// prepare and execute the command
 		command.setGuildID(event.getGuild());
 		command.setArgs(args);
-		event.getChannel().sendMessageEmbeds(command.execute().build()).queue();
+		command.setChannel(event.getChannel());
+		command.execute();
 		System.out.println("finished");
 	}
 
@@ -84,15 +86,6 @@ public class DiscordEventListener extends ListenerAdapter {
 //		// Adding to private/public posts container
 //		LinkedList<PostCard> temp = new LinkedList<>();
 //		PDA.postCards.put(event.getGuild(), temp);
-//		commandRan = true;
 //	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
 }
+
