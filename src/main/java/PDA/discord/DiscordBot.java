@@ -35,26 +35,18 @@ import java.nio.charset.*;
 @Scope("singleton")
 public class DiscordBot {
 
-    public String prefix = "!";
+
     public final Logger log;
+
+	@Autowired
 	private JDA jda;
 
 	@Autowired
 	Channels channels;
 
 
-	public DiscordBot() throws InterruptedException {
-
+	public DiscordBot() {
 		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
-		this.log.info("Initializing Discord Bot...");
-
-
-
-		//! setup JDA bot
-		setupJDA(parseToken());
-
-
-
 		this.log.info("Finished Discord Bot Initialization");
 	}
 
@@ -78,46 +70,5 @@ public class DiscordBot {
 		ChannelBean cb = channels.getChannel(guild);
 
 		jda.getTextChannelById(cb.getChannelid()).sendMessage(text);
-	}
-
-	/**
-	 * Initializes the jda object to allow us to talk with discord
-	 *
-	 * @param token holds the String token value that we need in order to initialize a discord bot through JDA
-	 * @throws InterruptedException in case a thread is interrupted
-	 */
-	private void setupJDA(String token) throws InterruptedException {
-		try {
-			this.jda = JDABuilder.createDefault(token).build();
-			this.jda.getPresence().setActivity(Activity.playing("Type " + prefix + "help for commands"));
-		} catch (LoginException e) {
-			this.log.error("The given Discord Bot token '{}' is invalid!", token);
-			System.exit(1);
-		}
-		this.jda.awaitReady();
-		this.jda.addEventListener(new DiscordEventListener());
-	}
-
-	private String parseToken() {
-		String jsonText;
-
-		try {
-			jsonText = IOUtils.toString(new FileInputStream("config.json"), StandardCharsets.UTF_8);
-		}
-		catch (IOException e) {
-			log.error("An error occurred while reading config.json", e);
-			return null;
-		}
-
-		JSONObject jsonToken;
-		try {
-			jsonToken = (JSONObject) new JSONParser().parse(jsonText);
-		}
-		catch (ParseException e) {
-			log.error("An error occurred while parsing JSON String into JSONObject", e);
-			return null;
-		}
-
-		return (String) jsonToken.get("TOKEN");
 	}
 }

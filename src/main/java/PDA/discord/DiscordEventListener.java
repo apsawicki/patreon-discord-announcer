@@ -4,6 +4,7 @@ import PDA.commands.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.*;
@@ -23,39 +24,46 @@ import org.springframework.stereotype.*;
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
+	private String prefix = "!";
+	CommandFactory commandFactory;
+
 	@Autowired
-	protected DiscordBot bot;
+	public DiscordEventListener(CommandFactory commandFactory) {
+		this.commandFactory = commandFactory;
+	}
 
 	// Runs everytime a message is sent in a discord server, will initialize a {@link BotCommand} object if the message contains a command
-
-	@EventListener
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
+		System.out.println("message received");
 		String[] args = event.getMessage().getContentRaw().split("\\s+"); // changing each word in a message to arguments separated by spaces
 
-		int prefixLength = bot.prefix.length();
+		int prefixLength = prefix.length();
 
 		// Return if args array is invalid or if the string given is too short to be a command(prefix + 3 characters)
 		if (args.length == 0 || args[0].length() < prefixLength + 3)
 			return;
 
-		BotCommand command;
+		TestGenericCommand command;
 
 		// use Class.forName to generate a new class with the given arguments, cutting out the prefix and case sensitivity.
 		try {
-			Class<?> clazz = Class.forName("PDA.commands." + args[0].substring(prefixLength).toLowerCase());
-			command = (BotCommand) clazz.getDeclaredConstructor().newInstance();
+			command = commandFactory.getCommand("PDA.commands.help");
 		} catch (Exception e) {
 			// Ignore any exceptions as we don't care if someone puts an invalid command name
+			e.printStackTrace();
 			return;
-//			e.printStackTrace();
 		}
+
 
 		// command variable should never be null as we will never reach here if it is null
 		command.setGuildID(event.getGuild());
 		command.setArgs(args);
-		command.execute();
+		event.getChannel().sendMessageEmbeds(command.execute().build()).queue();
+		System.out.println("finished");
 	}
+
+
 //
 //	/**
 //	 * Runs everytime the discord bot is added to a server during program runtime, will add the server information to allow for the program to run correctly
@@ -78,5 +86,13 @@ public class DiscordEventListener extends ListenerAdapter {
 //		PDA.postCards.put(event.getGuild(), temp);
 //		commandRan = true;
 //	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
 }
