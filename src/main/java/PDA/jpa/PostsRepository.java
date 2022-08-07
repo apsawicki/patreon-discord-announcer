@@ -22,6 +22,12 @@ public class PostsRepository {
         q.setParameter("guild", pb.getGuild());
         q.setParameter("url", pb.getUrl());
 
+        List<PostBean> pbList = q.getResultList();
+
+        if (pbList.isEmpty()) {
+            return new PostBean();
+        }
+        // TODO: if no posts, then return empty postbean
         return (PostBean) q.getResultList().get(0);
     }
 

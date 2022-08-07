@@ -1,10 +1,10 @@
 package PDA.selenium;
 
-import PDA.beans.ChannelBean;
+import PDA.beans.GuildBean;
 import PDA.beans.PostBean;
 import PDA.beans.UrlBean;
 import PDA.discord.DiscordBot;
-import PDA.jpa.Channels;
+import PDA.jpa.Guilds;
 import PDA.jpa.Posts;
 import PDA.jpa.Urls;
 import PDA.utils.PostBeanHelper;
@@ -59,7 +59,7 @@ public class PatreonThread {
 	Urls urls;
 
 	@Autowired
-	Channels channels;
+	Guilds guilds;
 
 	@Autowired
 	Posts posts;
@@ -95,14 +95,13 @@ public class PatreonThread {
 		this.log.info("Setup complete.  Starting to scan.");
 
 
-		for (ChannelBean cb : channels.getAllChannels()) {
+		for (GuildBean cb : guilds.getAllGuilds()) {
 			String guild = cb.getGuild();
 			this.log.info("Scanning current guild: '{}'", guild);
 
 			for (UrlBean ub : urls.getGuildUrls(guild)) {
 				String url = ub.getUrl();
 				this.log.info("Scanning current url: '{}'", url);
-
 
 				try {
 					goToPatreonPage(driver, url);
@@ -122,6 +121,7 @@ public class PatreonThread {
 
 				for (WebElement ele : foundPostElements) {
 					PostBean pb = PostBeanHelper.createPostBean(ele);
+					pb.setGuild(guild);
 					this.handlePost(guild, pb);
 				}
 
@@ -133,7 +133,7 @@ public class PatreonThread {
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
 	private void handlePost(String guild, PostBean pb) {
 
-		if (posts.getPost(pb) != null) {
+		if (posts.getPost(pb).getGuild() != null) {
 			posts.putPost(pb);
 			this.announcePost(guild, pb);
 		}

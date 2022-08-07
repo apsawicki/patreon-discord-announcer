@@ -1,8 +1,8 @@
 package PDA.discord;
 
-import PDA.beans.ChannelBean;
+import PDA.beans.GuildBean;
 import PDA.commands.*;
-import PDA.jpa.Channels;
+import PDA.jpa.Guilds;
 import PDA.jpa.Posts;
 import PDA.jpa.Urls;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -28,16 +28,17 @@ import org.springframework.stereotype.*;
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
-	private String prefix = "!"; // TODO: add prefix to db to make server specific prefix
-
 	private CommandFactory commandFactory;
-	@Autowired private Channels channels;
-	@Autowired private Posts posts;
-	@Autowired private Urls urls;
+	private Guilds guilds;
+	private Posts posts;
+	private Urls urls;
 
 	@Autowired // field injection autowiring on CommandFactory returns null instead of instantiated object
-	public DiscordEventListener(CommandFactory commandFactory) {
+	public DiscordEventListener(CommandFactory commandFactory, Guilds guilds, Posts posts, Urls urls) {
 		this.commandFactory = commandFactory;
+		this.guilds = guilds;
+		this.posts = posts;
+		this.urls = urls;
 	}
 
 	// Runs everytime a message is sent in a discord server
@@ -52,10 +53,11 @@ public class DiscordEventListener extends ListenerAdapter {
 		System.out.println("message received");
 		String[] args = event.getMessage().getContentRaw().split("\\s+"); // changing each word in a message to arguments separated by spaces
 
+		String prefix = guilds.getGuild(event.getGuild().getId()).getPrefix();
 		int prefixLength = prefix.length();
 
 		// Return if args array is invalid or if the string given is too short to be a command(prefix + 3 characters)
-		if (args.length == 0 || args[0].length() < prefixLength + 3)
+		if (args.length == 0 || args[0].length() < prefixLength + 3 || !args[0].startsWith(prefix))
 			return;
 
 		AbstractCommand command;
@@ -79,17 +81,18 @@ public class DiscordEventListener extends ListenerAdapter {
 	// Runs everytime the discord bot is added to a server during program runtime
 	@Override
 	public void onGuildJoin(GuildJoinEvent event) {
-		ChannelBean cb = new ChannelBean();
+		GuildBean cb = new GuildBean();
 		cb.setGuild(event.getGuild().getId());
 		cb.setChannelid(event.getGuild().getChannels().get(0).getId());
+		cb.setPrefix("!");
 
-		channels.putChannel(cb);
+		guilds.putGuild(cb);
 	}
 
 	// Runs everytime the discord bot leaves a server during runtime
 	@Override
 	public void onGuildLeave(GuildLeaveEvent event) {
-		channels.removeChannel(event.getGuild().getId());
+		guilds.removeGuild(event.getGuild().getId());
 		posts.removeGuildPosts(event.getGuild().getId());
 		urls.removeGuildUrls(event.getGuild().getId());
 	}

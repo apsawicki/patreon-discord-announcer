@@ -4,32 +4,32 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(basePackages = {"PDA.jpa"})
-@ActiveProfiles("test")
-public class JPASpringTest {
+@EnableScheduling
+@EnableJpaRepositories
+public class TestConfig {
 
-    // TODO: look at spring profiles to get specific application.properties files
-    @Value("${spring.datasource.url}")
-    String dsUrl;
+//    @Value("${spring.datasource.url}") String dsUrl;
+//    @Value("${spring.datasource.username}") String dsUsername;
+//    @Value("${spring.datasource.password}") String dsPassword;
 
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder<?> dataSource = DataSourceBuilder.create();
-        dataSource.driverClassName("org.h2.Driver");
-        dataSource.url("application.properties");
+        dataSource.driverClassName("org.h2.Driver"); // org.postgresql.Driver
+        dataSource.url("jdbc:h2:mem:testdb");
         dataSource.username("sa");
-        dataSource.password("sa");
+        dataSource.password("");
         return dataSource.build();
     }
 

@@ -2,6 +2,9 @@ package PDA.config;
 
 import PDA.commands.CommandFactory;
 import PDA.discord.DiscordEventListener;
+import PDA.jpa.Guilds;
+import PDA.jpa.Posts;
+import PDA.jpa.Urls;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.apache.commons.io.IOUtils;
@@ -24,6 +27,12 @@ public class PDAConfiguration {
 
     @Autowired
     CommandFactory commandFactory;
+    @Autowired
+    Posts posts;
+    @Autowired
+    Guilds guilds;
+    @Autowired
+    Urls urls;
 
     @Bean
     public JDA jda() {
@@ -31,7 +40,7 @@ public class PDAConfiguration {
         try {
             jda = JDABuilder.createDefault(parseToken()).build();
             jda.awaitReady();
-            jda.addEventListener(new DiscordEventListener(commandFactory));
+            jda.addEventListener(new DiscordEventListener(commandFactory, guilds, posts, urls));
 //            jda.getPresence().setActivity(Activity.playing("Type " + prefix + "help for commands"));
             return jda;
         } catch (LoginException | InterruptedException e) {

@@ -1,7 +1,7 @@
 package PDA.commands;
 
 import PDA.beans.*;
-import PDA.jpa.Channels;
+import PDA.jpa.Guilds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class setchannel extends AbstractCommand {
 
 	@Autowired
-	Channels channels;
+	Guilds guilds;
 
 	// Sets the text channel for the unique discord that issued the command
 	@Override
@@ -28,11 +28,11 @@ public class setchannel extends AbstractCommand {
 			send("No link provided");
 		} else {
 
-			ChannelBean cb = new ChannelBean();
+			GuildBean cb = new GuildBean();
 			cb.setGuild(guild.getId());
 			cb.setChannelid(args[1]);
 
-			channels.updateChannelByGuild(cb); // TODO: throw error based on if the channel is already set or somethign went wrong
+			guilds.updateChannelByGuild(cb); // TODO: throw error based on if the channel is already set or somethign went wrong
 			send(args[1] + " has been set as the bot output channel");
 		}
 	}

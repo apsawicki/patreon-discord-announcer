@@ -2,8 +2,8 @@ package PDA.discord;
 
 // import PDA.DiscordBotJoin;
 
-import PDA.beans.ChannelBean;
-import PDA.jpa.Channels;
+import PDA.beans.GuildBean;
+import PDA.jpa.Guilds;
 import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -30,16 +30,18 @@ public class DiscordBot {
 
     private final Logger log;
 
-	@Autowired
+
 	private JDA jda;
+	private Guilds guilds;
 
 	@Autowired
-	private Channels channels;
-
-
-	public DiscordBot() { // TODO: check guilds currently on the jda -- handle
+	public DiscordBot(JDA jda, Guilds guilds) { // TODO: check guilds currently on the jda -- handle
 		log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
 		log.info("Finished Discord Bot Initialization");
+		this.jda = jda;
+		this.guilds = guilds;
+
+		setupGuilds();
 	}
 
 	// sending embed to Guild "id" discord server
@@ -48,7 +50,7 @@ public class DiscordBot {
 	}
 
 	public synchronized void send(MessageEmbed embed, String guild) {
-		ChannelBean cb = channels.getChannel(guild);
+		GuildBean cb = guilds.getGuild(guild);
 
 		jda.getTextChannelById(cb.getChannelid()).sendMessageEmbeds(embed).queue();
 	}
@@ -59,8 +61,23 @@ public class DiscordBot {
 	}
 
 	public synchronized void send(String text, String guild) { // sending text
-		ChannelBean cb = channels.getChannel(guild);
+		GuildBean cb = guilds.getGuild(guild);
 
 		jda.getTextChannelById(cb.getChannelid()).sendMessage(text);
+	}
+
+	private void setupGuilds() {
+		for (Guild g : jda.getGuilds()) {
+			System.out.println("hi: " + g.getName());
+			System.out.println("response: " + guilds.getGuild(g.getId()).getGuild());
+			if (guilds.getGuild(g.getId()).getGuild() == null) {
+				GuildBean gb = new GuildBean();
+				gb.setGuild(g.getId());
+				gb.setPrefix("!");
+				gb.setChannelid(g.getChannels().get(0).getId());
+
+				guilds.putGuild(gb);
+			}
+		}
 	}
 }

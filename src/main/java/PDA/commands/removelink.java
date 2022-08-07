@@ -1,5 +1,6 @@
 package PDA.commands;
 
+import PDA.jpa.Posts;
 import PDA.jpa.Urls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ public class removelink extends AbstractCommand {
 	@Autowired
 	Urls urls;
 
+	@Autowired
+	Posts posts;
+
 	// Removes the discord server from the list of discord servers assigned to the patreon link given by the user
 	@Override
 	public void execute() {
@@ -29,6 +33,7 @@ public class removelink extends AbstractCommand {
 
 			try { // TODO: throw exceptions when accessing database
 				urls.removeUrl(guild.getId(), args[1]);
+				posts.removeGuildPosts(guild.getId());
 				send(args[1] + " has been removed from the list of links");
 			}
 			catch (Exception e) {

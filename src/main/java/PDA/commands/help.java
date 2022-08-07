@@ -1,5 +1,7 @@
 package PDA.commands;
 
+import PDA.jpa.Guilds;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,13 +16,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class help extends AbstractCommand {
 
+	@Autowired
+	Guilds guilds;
 
 	// Prints out the list of commands available to be used by a user
 	@Override
 	public void execute() {
-		// TODO: dynamically get all commands
+		String commands = "!help\n!setchannel\n!addlink\n!removelink\n!showlinks\n!getpublicposts\n!getprivateposts\n!changeprefix";
+		String prefix = guilds.getGuild(guild.getId()).getPrefix();
+
 		embed.setTitle("PDA Commands", null);
-		embed.setDescription("/help\n/setchannel\n/addlink\n/removelink\n/showlinks\n/getpublicposts\n/getprivateposts\n/changeprefix");
+		embed.setDescription(commands.replaceAll("!", prefix));
 
 		send(embed);
 	}

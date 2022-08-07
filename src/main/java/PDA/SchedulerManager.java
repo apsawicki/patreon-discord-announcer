@@ -11,7 +11,7 @@ public class SchedulerManager {
     @Autowired
     PatreonThread patreonThread;
 
-    @Scheduled(fixedRate = 1000000)
+    @Scheduled(fixedRate = 60000)
     public void patreonThread() {
         patreonThread.run();
     }
