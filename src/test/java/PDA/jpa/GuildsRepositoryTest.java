@@ -11,10 +11,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes = {GuildsRepository.class, TestConfig.class})
+@ContextConfiguration(classes = {TestConfig.class, GuildsRepository.class})
 public class GuildsRepositoryTest {
 
     @Autowired
@@ -29,6 +31,16 @@ public class GuildsRepositoryTest {
         gb.setChannelid("channel");
 
         guildsRepository.putGuild(gb);
+
+        List<GuildBean> gbList = guildsRepository.getAllChannels();
+
+        System.out.println(gbList);
+
+        for (GuildBean b : gbList) {
+            System.out.println(b.getGuild());
+            System.out.println(b.getPrefix());
+            System.out.println(b.getChannelid());
+        }
     }
 
     @Test

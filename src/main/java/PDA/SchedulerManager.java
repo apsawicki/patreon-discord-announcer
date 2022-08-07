@@ -12,7 +12,7 @@ public class SchedulerManager {
     PatreonThread patreonThread;
 
     @Scheduled(fixedRate = 60000)
-    public void patreonThread() {
+    public void patreonThread() { // TODO: for threading maybe get all guilds, then create x amount of threads for y guilds then feed patreonThread List of size z guilds to parse
         patreonThread.run();
     }
 
