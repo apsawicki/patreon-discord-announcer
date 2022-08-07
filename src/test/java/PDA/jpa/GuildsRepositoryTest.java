@@ -17,6 +17,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {TestConfig.class, GuildsRepository.class})
+@ActiveProfiles("test")
 public class GuildsRepositoryTest {
 
     @Autowired
@@ -29,6 +30,7 @@ public class GuildsRepositoryTest {
         gb.setGuild("guild");
         gb.setPrefix("prefix");
         gb.setChannelid("channel");
+        gb.setGuild_id(1);
 
         guildsRepository.putGuild(gb);
 

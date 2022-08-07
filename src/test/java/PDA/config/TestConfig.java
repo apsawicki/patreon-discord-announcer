@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -20,12 +22,9 @@ import java.util.Properties;
 @Configuration
 @EnableScheduling
 @EnableJpaRepositories
-@PropertySource("application-test.properties")
+@Profile("test")
+@TestPropertySource("/application-test.properties")
 public class TestConfig {
-
-//    @Value("${spring.datasource.url}") String dsUrl;
-//    @Value("${spring.datasource.username}") String dsUsername;
-//    @Value("${spring.datasource.password}") String dsPassword;
 
     @Autowired
     private Environment env;
@@ -36,7 +35,7 @@ public class TestConfig {
         System.out.println(env.getProperty("spring.datasource.url"));
 
         DataSourceBuilder<?> dataSource = DataSourceBuilder.create();
-        dataSource.driverClassName(env.getProperty("spring.datasource.driver-class-name")); // org.postgresql.Driver
+        dataSource.driverClassName(env.getProperty("spring.datasource.driver-class-name"));
         dataSource.url(env.getProperty("spring.datasource.url"));
         dataSource.username(env.getProperty("spring.datasource.username"));
         dataSource.password(env.getProperty("spring.datasource.password"));

@@ -37,7 +37,17 @@ public class GuildsRepository {
 
     @Transactional
     public void putGuild(GuildBean gb) { // TODO: check if guild/record is already in database then either update or do nothing
-        em.persist(gb);
+        String sql = "insert into guilds (guild, channelid, prefix) values (:guild, :channelid, :prefix)";
+        String guild = gb.getGuild();
+        String channelid = gb.getChannelid();
+        String prefix = gb.getPrefix();
+
+        Query q = em.createNativeQuery(sql, GuildBean.class);
+        q.setParameter("guild", guild);
+        q.setParameter("channelid", channelid);
+        q.setParameter("prefix", prefix);
+
+        q.executeUpdate();
     }
 
     @Transactional
