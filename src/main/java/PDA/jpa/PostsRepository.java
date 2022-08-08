@@ -15,12 +15,12 @@ public class PostsRepository {
     private EntityManager em;
 
     @Transactional
-    public PostBean getPost(PostBean pb) {
+    public PostBean getPost(String guild, String url) {
         String sql = "select * from posts where guild = :guild and url = :url";
 
         Query q = em.createNativeQuery(sql, PostBean.class);
-        q.setParameter("guild", pb.getGuild());
-        q.setParameter("url", pb.getUrl());
+        q.setParameter("guild", guild);
+        q.setParameter("url", url);
 
         List<PostBean> pbList = q.getResultList();
 
@@ -52,7 +52,17 @@ public class PostsRepository {
 
     @Transactional
     public void putPost(PostBean pb) { // good
-        em.persist(pb);
+        String sql = "insert into posts (published, title, url, content, isprivate, guild) values (:published, :title, :url, :content, :isprivate, :guild)";
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("published", pb.getPublishDate());
+        q.setParameter("title", pb.getTitle());
+        q.setParameter("url", pb.getUrl());
+        q.setParameter("content", pb.getContent());
+        q.setParameter("isprivate", pb.isPrivate());
+        q.setParameter("guild", pb.getGuild());
+
+        q.executeUpdate();
     }
 
     @Transactional

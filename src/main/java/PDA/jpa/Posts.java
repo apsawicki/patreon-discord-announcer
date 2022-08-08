@@ -12,8 +12,8 @@ public class Posts {
     @Autowired
     PostsRepository postsRepository;
 
-    public PostBean getPost(PostBean pb) {
-        return postsRepository.getPost(pb);
+    public PostBean getPost(String guild, String url) {
+        return postsRepository.getPost(guild, url);
     }
 
     public List<PostBean> getAllPosts() {

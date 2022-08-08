@@ -12,12 +12,14 @@ import PDA.utils.PostBeanHelper;
 import ch.qos.logback.classic.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidArgumentException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
@@ -122,7 +124,7 @@ public class PatreonThread {
 				for (WebElement ele : foundPostElements) {
 					PostBean pb = PostBeanHelper.createPostBean(ele);
 					pb.setGuild(guild);
-					this.handlePost(guild, pb);
+					this.handlePost(url, guild, pb);
 				}
 
 			}
@@ -131,9 +133,9 @@ public class PatreonThread {
 	}
 
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
-	private void handlePost(String guild, PostBean pb) {
+	private void handlePost(String url, String guild, PostBean pb) {
 
-		if (posts.getPost(pb).getGuild() != null) {
+		if (posts.getPost(guild, url).getGuild() != null) {
 			posts.putPost(pb);
 			this.announcePost(guild, pb);
 		}
@@ -382,13 +384,14 @@ public class PatreonThread {
 			options.setHeadless(true);
 			options.setLogLevel(FirefoxDriverLogLevel.FATAL);
 
-			// TODO: something in this commented code makes the firefox driver filepath null when we get the driver with WebDriverManager
+
 			// Marionette is required to redirect Firefox's logging
-//			options.setCapability(FirefoxDriver.Capability.MARIONETTE, "true");
-//
-//			// Set redirect location.  If OS is Windows based then "NUL:", otherwise "/dev/null"
-//			String logLocation = SystemUtils.OS_NAME.startsWith("Windows") ? "NUL:" : "/dev/null";
-//
+			options.setCapability(FirefoxDriver.Capability.MARIONETTE, "true");
+
+			// Set redirect location.  If OS is Windows based then "NUL:", otherwise "/dev/null"
+			String logLocation = SystemUtils.OS_NAME.startsWith("Windows") ? "NUL:" : "/dev/null";
+
+			// TODO: something in this commented code makes the firefox driver filepath null when we get the driver with WebDriverManager
 //			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logLocation);
 
 			// Create the driver

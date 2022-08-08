@@ -35,7 +35,15 @@ public class UrlsRepository {
 
     @Transactional // TODO: check if url/guild pair is already in the db and don't put if it is
     public void putUrl(UrlBean ub) { // good
-        em.persist(ub);
+        String sql = "insert into urls (url, guild) values (:url, :guild)";
+        String url = ub.getUrl();
+        String guild = ub.getGuild();
+
+        Query q = em.createNativeQuery(sql, UrlBean.class);
+        q.setParameter("url", url);
+        q.setParameter("guild", guild);
+
+        q.executeUpdate();
     }
 
     @Transactional

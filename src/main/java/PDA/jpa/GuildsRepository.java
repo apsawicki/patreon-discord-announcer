@@ -15,7 +15,7 @@ public class GuildsRepository {
     private EntityManager em;
 
     @Transactional(readOnly = true)
-    public List<GuildBean> getAllChannels() {
+    public List<GuildBean> getAllGuilds() {
         String sql = "select * from guilds";
 
         Query q = em.createNativeQuery(sql, GuildBean.class);
@@ -24,7 +24,7 @@ public class GuildsRepository {
     }
 
     @Transactional
-    public GuildBean getChannel(String guild) {
+    public GuildBean getGuild(String guild) {
         String sql = "select * from guilds where guild = :guild";
 
         Query q = em.createNativeQuery(sql, GuildBean.class);

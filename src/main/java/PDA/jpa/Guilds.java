@@ -13,11 +13,11 @@ public class Guilds {
    GuildsRepository guildsRepository;
 
     public List<GuildBean> getAllGuilds() { // good
-        return guildsRepository.getAllChannels();
+        return guildsRepository.getAllGuilds();
     }
 
     public GuildBean getGuild(String guild){ // good
-        return guildsRepository.getChannel(guild);
+        return guildsRepository.getGuild(guild);
     }
 
     public void putGuild(GuildBean gb){ // persist - good
