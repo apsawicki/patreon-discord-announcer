@@ -124,7 +124,7 @@ public class PatreonThread {
 				for (WebElement ele : foundPostElements) {
 					PostBean pb = PostBeanHelper.createPostBean(ele);
 					pb.setGuild(guild);
-					this.handlePost(url, guild, pb);
+					this.handlePost(guild, pb);
 				}
 
 			}
@@ -133,9 +133,8 @@ public class PatreonThread {
 	}
 
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
-	private void handlePost(String url, String guild, PostBean pb) {
-
-		if (posts.getPost(guild, url).getGuild() != null) {
+	private void handlePost(String guild, PostBean pb) {
+		if (posts.getPost(guild, pb.getUrl()).getGuild() == null) {
 			posts.putPost(pb);
 			this.announcePost(guild, pb);
 		}
