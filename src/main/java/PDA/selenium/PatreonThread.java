@@ -9,10 +9,14 @@ import PDA.jpa.Posts;
 import PDA.jpa.Urls;
 import PDA.utils.PostBeanHelper;
 
+import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidArgumentException;
 import org.openqa.selenium.WebElement;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.awt.Color;
@@ -30,7 +34,11 @@ import java.util.List;
  */
 
 @Component
-public class PatreonThread extends PatreonScraper {
+@Scope("prototype")
+public class PatreonThread implements Runnable{
+
+	@Autowired
+	PatreonScraper patreonScraper;
 
 	@Autowired
 	DiscordBot bot;
@@ -44,42 +52,51 @@ public class PatreonThread extends PatreonScraper {
 	@Autowired
 	Posts posts;
 
+	private GuildBean gb;
+	private By postCardSelector;
+	private Logger log;
+
+	public void setup(GuildBean gb) {
+		this.gb = gb;
+
+		this.postCardSelector = By.cssSelector("[data-tag='post-card']");
+		this.log = (Logger) LoggerFactory.getLogger(this.getClass().getSimpleName());
+	}
+
 	public void run() {
 		// Initialize our waiting interface
-		this.log.info("Setup complete.  Starting to scan.");
+		log.info("Setup complete.  Starting to scan.");
 
-		for (GuildBean cb : guilds.getAllGuilds()) {
-			String guild = cb.getGuild();
-			this.log.info("Scanning current guild: '{}'", guild);
+		String guild = gb.getGuild();
+		log.info("Scanning current guild: '{}'", guild);
 
-			for (UrlBean ub : urls.getGuildUrls(guild)) {
-				String url = ub.getUrl();
-				this.log.info("Scanning current url: '{}'", url);
+		for (UrlBean ub : urls.getGuildUrls(guild)) {
+			String url = ub.getUrl();
+			log.info("Scanning current url: '{}'", url);
 
-				try {
-					goToPatreonPage(driver, url);
-				}
-				catch (InvalidArgumentException e) {
-					urls.removeUrl(guild, url);
-					this.log.warn("URL '{}' was removed from the list of links from guild '{}'", url, guild);
-					continue;
-				}
+			try {
+				patreonScraper.goToPatreonPage(url, postCardSelector);
+			}
+			catch (InvalidArgumentException e) {
+				urls.removeUrl(guild, url);
+				log.warn("URL '{}' was removed from the list of links from guild '{}'", url, guild);
+				continue;
+			}
 
-				if (this.visibleElementFound(postCardSelector)) {
-					this.sleep(4000);
-				}
+			if (patreonScraper.visibleElementFound(postCardSelector)) {
+				patreonScraper.sleep(4000);
+			}
 
-				this.log.info("Scanning all post cards.");
-				List<WebElement> foundPostElements = driver.findElements(postCardSelector);
+			log.info("Scanning all post cards.");
+			List<WebElement> foundPostElements = patreonScraper.driver.findElements(postCardSelector);
 
-				for (WebElement ele : foundPostElements) {
-					PostBean pb = PostBeanHelper.createPostBean(ele);
-					pb.setGuild(guild);
-					this.handlePost(guild, pb);
-				}
+			for (WebElement ele : foundPostElements) {
+				PostBean pb = PostBeanHelper.createPostBean(ele);
+				pb.setGuild(guild);
+				this.handlePost(guild, pb);
 			}
 		}
-		this.log.info("Run finished!");
+		log.info("Run finished!");
 	}
 
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord

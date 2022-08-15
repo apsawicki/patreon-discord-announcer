@@ -90,4 +90,17 @@ public class PostBean {
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
     }
+
+    @Override
+    public String toString() {
+        return "PostBean{" +
+                "post_id=" + post_id +
+                ", guild='" + guild + '\'' +
+                ", publishDate='" + publishDate + '\'' +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", content='" + content + '\'' +
+                ", isPrivate=" + isPrivate +
+                '}';
+    }
 }

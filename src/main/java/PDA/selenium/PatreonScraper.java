@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
@@ -21,17 +23,16 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Random;
 
+@Component
+@Scope("prototype")
 public class PatreonScraper {
 
     Wait<WebDriver> wait;
-    By postCardSelector;
     Logger log;
     WebDriver driver;
-    int[][] differenceMatrix;
 
 
     public PatreonScraper () {
-        this.postCardSelector = By.cssSelector("[data-tag='post-card']");
         this.log = (Logger) LoggerFactory.getLogger(this.getClass().getSimpleName());
 
         driver = createBrowser();
@@ -115,7 +116,7 @@ public class PatreonScraper {
     }
 
     // Attempts to load the patreon page, handles events where it asks you to login or has a captcha to solve
-    public void goToPatreonPage(WebDriver driver, String patreonUrl) {
+    public void goToPatreonPage(String patreonUrl, By postCardSelector) {
         // Load the login page to pass GeeTest, ensuring we're allowed to see post
         driver.get(patreonUrl);
 
@@ -241,7 +242,7 @@ public class PatreonScraper {
         // Store WxH of each image
         int originalWidth = originalImage.getWidth();
         int originalHeight = originalImage.getHeight();
-        differenceMatrix = new int[originalWidth][originalHeight];
+        int[][] differenceMatrix = new int[originalWidth][originalHeight];
 
         // Calculate the differences between the original image and the puzzle image
         for (int y = 0; y < originalHeight; y++) {

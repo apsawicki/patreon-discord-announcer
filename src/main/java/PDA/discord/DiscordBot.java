@@ -29,8 +29,6 @@ public class DiscordBot {
 
 
     private final Logger log;
-
-
 	private JDA jda;
 	private Guilds guilds;
 
@@ -66,10 +64,9 @@ public class DiscordBot {
 		jda.getTextChannelById(cb.getChannelid()).sendMessage(text);
 	}
 
-	private void setupGuilds() {
+	private void setupGuilds() { // TODO: use one query and check all guilds in database
 		for (Guild g : jda.getGuilds()) {
-			System.out.println("hi: " + g.getName());
-			System.out.println("response: " + guilds.getGuild(g.getId()).getGuild());
+			log.info("Checking guild \"'{}'\" for database setup", g.getName());
 			if (guilds.getGuild(g.getId()).getGuild() == null) {
 				GuildBean gb = new GuildBean();
 				gb.setGuild(g.getId());
