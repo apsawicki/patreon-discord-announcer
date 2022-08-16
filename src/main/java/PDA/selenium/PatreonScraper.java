@@ -146,7 +146,7 @@ public class PatreonScraper {
 
                 driver.manage().deleteAllCookies();
                 geeTest(driver);
-                driver.get(patreonUrl);
+                // driver.get(patreonUrl);
             }
         }
     }

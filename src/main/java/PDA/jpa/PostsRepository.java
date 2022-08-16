@@ -85,4 +85,14 @@ public class PostsRepository {
 
         q.executeUpdate();
     }
+
+    @Transactional
+    public List<PostBean> getExistingPosts(String guild, String urlList) {
+        String sql = "SELECT * FROM posts WHERE guild = :guild AND url IN " + urlList;
+
+        Query q = em.createNativeQuery(sql, PostBean.class);
+        q.setParameter("guild", guild);
+
+        return q.getResultList();
+    }
 }

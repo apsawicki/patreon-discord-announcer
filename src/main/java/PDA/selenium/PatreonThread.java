@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
-public class PatreonThread implements Runnable{
+public class PatreonThread implements Runnable {
 
 	@Autowired
 	PatreonScraper patreonScraper;
@@ -72,6 +73,7 @@ public class PatreonThread implements Runnable{
 
 		for (UrlBean ub : urls.getGuildUrls(guild)) {
 			String url = ub.getUrl();
+			url += "/posts";
 			log.info("Scanning current url: '{}'", url);
 
 			try {
@@ -90,17 +92,19 @@ public class PatreonThread implements Runnable{
 			log.info("Scanning all post cards.");
 			List<WebElement> foundPostElements = patreonScraper.driver.findElements(postCardSelector);
 
-			for (WebElement ele : foundPostElements) {
-				PostBean pb = PostBeanHelper.createPostBean(ele);
+			for (PostBean pb : getNewPosts(guild, foundPostElements)) {
 				pb.setGuild(guild);
-				this.handlePost(guild, pb);
+				handlePost(pb);
 			}
 		}
+		patreonScraper.driver.quit();
 		log.info("Run finished!");
 	}
 
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
-	private void handlePost(String guild, PostBean pb) {
+	private void handlePost(PostBean pb) {
+		String guild = pb.getGuild();
+
 		if (posts.getPost(guild, pb.getUrl()).getGuild() == null) {
 			posts.putPost(pb);
 			this.announcePost(guild, pb);
@@ -116,5 +120,24 @@ public class PatreonThread implements Runnable{
 		em.setFooter(postCard.getPublishDate(), null);
 		em.setColor(postCard.isPrivate() ? Color.red : Color.green);
 		bot.send(em.build(), guild);
+	}
+
+	// gets the list of posts that haven't already been added to the database
+	private List<PostBean> getNewPosts(String guild, List<WebElement> foundPostElements) {
+		List<PostBean> elements = new ArrayList<>();
+
+		for (WebElement ele : foundPostElements) {
+			PostBean pb = PostBeanHelper.createPostBean(ele);
+			pb.setGuild(guild);
+			elements.add(pb);
+		}
+
+		List<PostBean> existingPosts = posts.getExistingPosts(guild, elements);
+
+		elements.removeAll(existingPosts);
+
+		log.info("New post size: {}", elements.size());
+
+		return elements;
 	}
 }

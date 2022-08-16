@@ -2,6 +2,7 @@ package PDA.commands;
 
 import PDA.beans.*;
 import PDA.jpa.Urls;
+import PDA.selenium.PatreonSingleLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,9 @@ public class addlink extends AbstractCommand {
     @Autowired
     Urls urls;
 
+    @Autowired
+    PatreonSingleLink patreonSingleLink;
+
 	// Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
 	@Override
 	public void execute() {
@@ -35,6 +39,7 @@ public class addlink extends AbstractCommand {
             try{ // TODO: throw exceptions when accessing database
                 urls.putUrl(ub);
                 send(args[1] + " has been added to the list of links");
+                patreonSingleLink.readPosts(guild, args[1]);
             }
             catch (Exception e){
                 send(args[1] + " was either not added or already in the list of links");

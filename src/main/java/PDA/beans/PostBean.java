@@ -103,4 +103,17 @@ public class PostBean {
                 ", isPrivate=" + isPrivate +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof PostBean)) {
+            return false;
+        }
+
+        return (this.url.equals(((PostBean) o).getUrl()) && this.guild.equals(((PostBean) o).getGuild()));
+    }
 }

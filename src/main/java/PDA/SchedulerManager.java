@@ -38,7 +38,7 @@ public class SchedulerManager {
     Then the threads will wait X amount of time for patreonThread() function below to call
      */
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedDelay = 60000)
     public void patreonThread() throws InterruptedException { // currently 1 thread per guild
 
         List<GuildBean> gbList = guilds.getAllGuilds();
