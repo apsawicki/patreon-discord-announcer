@@ -104,7 +104,7 @@ public class PatreonThread implements Runnable {
 	// Checks if we have already announced this post, adds posts to container of posts if it is a new post. Then it calls announcePost(:PostCard, :Guild) to send the post to discord
 	private void handlePost(PostBean pb) {
 		String guild = pb.getGuild();
-
+		// TODO: necessary to check?
 		if (posts.getPost(guild, pb.getUrl()).getGuild() == null) {
 			posts.putPost(pb);
 			this.announcePost(guild, pb);
