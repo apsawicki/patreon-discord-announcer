@@ -86,5 +86,12 @@ public class GuildsRepository {
         q.executeUpdate();
     }
 
-    // TODO: exists() helper class (maybe not helper in the future?)
+    @Transactional
+    public List<GuildBean> getExistingGuilds(String guildList) {
+        String sql = "SELECT * FROM guilds WHERE guild IN " + guildList;
+
+        Query q = em.createNativeQuery(sql, GuildBean.class);
+
+        return q.getResultList();
+    }
 }

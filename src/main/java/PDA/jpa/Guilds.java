@@ -35,4 +35,17 @@ public class Guilds {
     public void updatePrefixByGuild(GuildBean gb) {
         guildsRepository.updatePrefix(gb);
     }
+
+    public List<GuildBean> getExistingGuilds(List<GuildBean> gbList) {
+        StringBuilder guildList = new StringBuilder("(");
+
+        // fence post problem
+        guildList.append("'").append(gbList.get(0).getGuild()).append("'");
+        for (int i = 1; i < gbList.size(); i++) {
+            guildList.append(", '").append(gbList.get(i).getGuild()).append("'");
+        }
+        guildList.append(")");
+
+        return guildsRepository.getExistingGuilds(guildList.toString());
+    }
 }

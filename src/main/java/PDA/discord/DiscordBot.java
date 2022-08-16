@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of the JDA discord bot API.
  * <p>
@@ -39,7 +42,8 @@ public class DiscordBot {
 		this.jda = jda;
 		this.guilds = guilds;
 
-		setupGuilds();
+		setupAddGuilds();
+		setupRemoveGuilds();
 	}
 
 	// sending embed to Guild "id" discord server
@@ -64,17 +68,56 @@ public class DiscordBot {
 		jda.getTextChannelById(cb.getChannelid()).sendMessage(text);
 	}
 
-	private void setupGuilds() { // TODO: use one query and check all guilds in database
-		for (Guild g : jda.getGuilds()) {
-			log.info("Checking guild \"'{}'\" for database setup", g.getName());
-			if (guilds.getGuild(g.getId()).getGuild() == null) {
-				GuildBean gb = new GuildBean();
-				gb.setGuild(g.getId());
-				gb.setPrefix("!");
-				gb.setChannelid(g.getChannels().get(0).getId());
+	private void setupAddGuilds() {
 
-				guilds.putGuild(gb);
+		// all guilds connected to jda
+		List<GuildBean> gbList = new ArrayList<>();
+		for (Guild g : jda.getGuilds()) {
+			GuildBean gb = new GuildBean();
+			gb.setGuild(g.getId());
+			gbList.add(gb);
+		}
+
+		// getting all guilds in the database that are connected to jda
+		List<GuildBean> existingGuilds = guilds.getExistingGuilds(gbList);
+
+		// then taking those guilds away from all the ones connected to jda to get the guilds that are connected to jda but are not in the database
+		gbList.remove(existingGuilds);
+
+		// adding jda guilds not in database to the database
+		for (GuildBean gb : gbList) {
+			Guild g = jda.getGuildById(gb.getGuild());
+
+			gb.setPrefix("!");
+			try {
+				gb.setChannelid(g.getChannels().get(0).getId());
 			}
+			catch (Exception e) {
+				gb.setChannelid(""); // after user creates a text channel they can use setchannel command
+			}
+
+			log.info("Adding guild \"{}\" to database", g.getName());
+			guilds.putGuild(gb);
+		}
+	}
+
+	private void setupRemoveGuilds() {
+
+		// all guilds connected with jda
+		List<GuildBean> gbList = new ArrayList<>();
+		for (Guild g : jda.getGuilds()) {
+			GuildBean gb = new GuildBean();
+			gb.setGuild(g.getId());
+			gbList.add(gb);
+		}
+
+		// getting every guild in database, then removing the ones connected to jda to get deprecated guilds in list
+		List<GuildBean> deprecatedGuilds = guilds.getAllGuilds();
+		deprecatedGuilds.remove(gbList);
+
+		// removing deprecated guilds from database
+		for (GuildBean gb : deprecatedGuilds) {
+			guilds.removeGuild(gb.getGuild());
 		}
 	}
 }

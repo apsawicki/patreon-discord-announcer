@@ -57,4 +57,17 @@ public class GuildBean {
     public void setGuild_id(int guild_id) {
         this.guild_id = guild_id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof GuildBean)) {
+            return false;
+        }
+
+        return this.guild.equals(((GuildBean) o).getGuild());
+    }
 }
