@@ -36,7 +36,7 @@ public class DiscordBot {
 	private Guilds guilds;
 
 	@Autowired
-	public DiscordBot(JDA jda, Guilds guilds) { // TODO: check guilds currently on the jda -- handle
+	public DiscordBot(JDA jda, Guilds guilds) {
 		log = (Logger) LoggerFactory.getLogger(this.getClass().getName());
 		log.info("Finished Discord Bot Initialization");
 		this.jda = jda;
@@ -69,6 +69,7 @@ public class DiscordBot {
 	}
 
 	private void setupAddGuilds() {
+		log.info("Starting guild add setup");
 
 		// all guilds connected to jda
 		List<GuildBean> gbList = new ArrayList<>();
@@ -82,7 +83,7 @@ public class DiscordBot {
 		List<GuildBean> existingGuilds = guilds.getExistingGuilds(gbList);
 
 		// then taking those guilds away from all the ones connected to jda to get the guilds that are connected to jda but are not in the database
-		gbList.remove(existingGuilds);
+		gbList.removeAll(existingGuilds);
 
 		// adding jda guilds not in database to the database
 		for (GuildBean gb : gbList) {
@@ -99,9 +100,12 @@ public class DiscordBot {
 			log.info("Adding guild \"{}\" to database", g.getName());
 			guilds.putGuild(gb);
 		}
+
+		log.info("Successfully ended guild add setup");
 	}
 
 	private void setupRemoveGuilds() {
+		log.info("Starting guild remove setup");
 
 		// all guilds connected with jda
 		List<GuildBean> gbList = new ArrayList<>();
@@ -113,11 +117,13 @@ public class DiscordBot {
 
 		// getting every guild in database, then removing the ones connected to jda to get deprecated guilds in list
 		List<GuildBean> deprecatedGuilds = guilds.getAllGuilds();
-		deprecatedGuilds.remove(gbList);
+		deprecatedGuilds.removeAll(gbList);
 
 		// removing deprecated guilds from database
 		for (GuildBean gb : deprecatedGuilds) {
 			guilds.removeGuild(gb.getGuild());
 		}
+
+		log.info("Successfully ended guild remove setup");
 	}
 }

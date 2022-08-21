@@ -36,12 +36,14 @@ public class PatreonSingleLink {
     private By postCardSelector;
     private Logger log;
 
-    public void PatreonSingleLink() {
+    public void setup() {
+        System.out.println("starting");
         this.postCardSelector = By.cssSelector("[data-tag='post-card']");
         this.log = (Logger) LoggerFactory.getLogger(this.getClass().getSimpleName());
     }
 
     public void readPosts(Guild guild, String url) {
+        System.out.println("readposts");
         url += "/posts";
 
         log.info("Going to patreon page: '{}'", url);

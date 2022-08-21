@@ -4,6 +4,7 @@ import PDA.beans.*;
 import PDA.jpa.Urls;
 import PDA.selenium.PatreonSingleLink;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,15 +16,15 @@ import org.springframework.stereotype.Component;
  * 2) Check if the link is already in the list of links
  * 3) Add the guild to the list of guilds associated with the particular link
  */
-// TODO: after add link, add all current posts to db without posting
+
 @Component
 public class addlink extends AbstractCommand {
 
     @Autowired
-    Urls urls;
+    ApplicationContext context;
 
     @Autowired
-    PatreonSingleLink patreonSingleLink;
+    Urls urls;
 
 	// Adds a patreonUrl link to the HashMap patreonUrls mapped to the guild that issued the command
 	@Override
@@ -38,10 +39,15 @@ public class addlink extends AbstractCommand {
 
             try{ // TODO: throw exceptions when accessing database
                 urls.putUrl(ub);
-                send(args[1] + " has been added to the list of links");
+
+                PatreonSingleLink patreonSingleLink = context.getBean("patreonSingleLink", PatreonSingleLink.class);
+                patreonSingleLink.setup();
                 patreonSingleLink.readPosts(guild, args[1]);
+
+                send(args[1] + " has been successfully added to the list of links");
             }
             catch (Exception e){
+                System.out.println(e.getMessage());
                 send(args[1] + " was either not added or already in the list of links");
             }
 		}

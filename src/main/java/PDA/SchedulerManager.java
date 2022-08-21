@@ -67,4 +67,6 @@ public class SchedulerManager {
             log.info("Thread '{}' joined", t.getId());
         }
     }
+
+    // TODO: check posts have any guilds that are no longer in the database then delete in posts table (maybe urls as well)
 }
