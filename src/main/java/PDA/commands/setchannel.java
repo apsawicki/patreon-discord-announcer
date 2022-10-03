@@ -1,6 +1,9 @@
 package PDA.commands;
 
-import PDA.DiscordBot;
+import PDA.beans.*;
+import PDA.jpa.Guilds;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * setchannel discord bot command.
@@ -12,20 +15,25 @@ import PDA.DiscordBot;
  * 3) Set the text channel where the discord bot outputs depending on what text channel ID was provided
  */
 
-public class setchannel extends GenericBotCommand {
+@Component
+public class setchannel extends AbstractCommand {
 
-	/**
-	 * Sets the text channel for the unique discord that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	@Autowired
+	Guilds guilds;
+
+	// Sets the text channel for the unique discord that issued the command
 	@Override
-	public void execute(DiscordBot bot) {
+	public void execute() {
 		if (args.length <= 1) {
-			bot.send("No link provided", guild);
+			send("No link provided");
 		} else {
-			bot.addChannel(args[1], guild);
-			bot.send(args[1] + " has been set as the bot output channel", guild);
+
+			GuildBean cb = new GuildBean();
+			cb.setGuild(guild.getId());
+			cb.setChannelid(args[1]);
+
+			guilds.updateChannelByGuild(cb); // TODO: throw error based on if the channel is already set or somethign went wrong
+			send(args[1] + " has been set as the bot output channel");
 		}
 	}
 }

@@ -1,10 +1,9 @@
 package PDA.commands;
 
-import PDA.PDA;
-import PDA.DiscordBot;
-import net.dv8tion.jda.api.entities.Guild;
-
-import java.util.ArrayList;
+import PDA.jpa.Posts;
+import PDA.jpa.Urls;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * removelink discord bot command.
@@ -16,28 +15,29 @@ import java.util.ArrayList;
  * 3) Remove the guild from the list of guilds associated with the particular link
  */
 
-public class removelink extends GenericBotCommand {
+@Component
+public class removelink extends AbstractCommand {
 
-	/**
-	 * Removes the discord server from the list of discord servers assigned to the patreon link given by the user
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	@Autowired
+	Urls urls;
+
+	@Autowired
+	Posts posts;
+
+	// Removes the discord server from the list of discord servers assigned to the patreon link given by the user
 	@Override
-	public void execute(DiscordBot bot) {
+	public void execute() {
 		if (args.length <= 1) {
-			bot.send("No link provided", guild);
+			send("No link provided");
 		} else {
-			ArrayList<Guild> guilds;
 
-			if ((guilds = PDA.patreonUrls.get(args[1])) == null) {
-				bot.send(args[1] + " is not in the list of links", guild);
-				return;
+			try { // TODO: throw exceptions when accessing database
+				urls.removeUrl(guild.getId(), args[1]);
+				posts.removeGuildPosts(guild.getId());
+				send(args[1] + " has been removed from the list of links");
 			}
-
-			if (PDA.patreonUrls.containsKey(args[1]) && guilds.remove(guild)) {
-				PDA.patreonUrls.put(args[1], guilds);
-				bot.send(args[1] + " has been removed from the patreon link list", guild);
+			catch (Exception e) {
+				send(args[1] + " was either not in the list of links or was not removed");
 			}
 		}
 	}

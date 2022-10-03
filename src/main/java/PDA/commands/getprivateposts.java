@@ -1,8 +1,9 @@
 package PDA.commands;
 
-import PDA.DiscordBot;
-import PDA.PDA;
-import PDA.PostCard;
+import PDA.beans.*;
+import PDA.jpa.Posts;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * getprivateposts discord bot command.
@@ -13,28 +14,26 @@ import PDA.PostCard;
  *
  */
 
-public class getprivateposts extends GenericBotCommand {
+@Component
+public class getprivateposts extends AbstractCommand {
 
-	/**
-	 * Prints out all private posts unique to the discord that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	@Autowired
+	Posts posts;
+
+	// Prints out all private posts unique to the discord that issued the command
 	@Override
-	public void execute(DiscordBot bot) {
-		bot.setTitle("Private Posts:", null, guild);
-		bot.send(guild);
+	public void execute() {
+		embed.setTitle("Private Posts: ", null); // TODO: ask for user input on specific patreon private posts
+		send(embed);
 
-		for (PostCard currentPostCard : PDA.postCards.get(guild)) {
-			if (!currentPostCard.isPrivate())
+		for (PostBean post : posts.getGuildPosts(guild.getId())) {
+			if (!post.isPrivate())
 				continue;
 
-			synchronized (bot){
-				bot.setTitle(currentPostCard.getTitle(), null, guild);
-				bot.setDescription(currentPostCard.getContent(), guild);
-				bot.setFooter(currentPostCard.getPublishDate(), currentPostCard.getUrl(), guild);
-				bot.send(guild);
-			}
+			embed.setTitle(post.getTitle(), null);
+			embed.setDescription(post.getContent());
+			embed.setFooter(post.getPublishDate(), post.getUrl());
+			send(embed);
 		}
 	}
 }

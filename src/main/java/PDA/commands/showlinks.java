@@ -1,7 +1,11 @@
 package PDA.commands;
 
-import PDA.DiscordBot;
-import PDA.PDA;
+import PDA.beans.*;
+import PDA.jpa.Urls;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * showlinks discord bot command.
@@ -12,29 +16,29 @@ import PDA.PDA;
  * 2) Send an embed holding the list of patreon links that the discord server is currently tracking
  */
 
-public class showlinks extends GenericBotCommand {
+@Component
+public class showlinks extends AbstractCommand {
 
-	/**
-	 * Prints out the list of all links added to the discord server that issued the command
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	@Autowired
+	Urls urls;
+
+	// Prints out the list of all links added to the discord server that issued the command
 	@Override
-	public void execute(DiscordBot bot) {
+	public void execute() {
 		StringBuilder linkContainer = new StringBuilder("");
 
-		for (String patreonUrl : PDA.patreonUrls.keySet()) {
-			if (PDA.patreonUrls.get(patreonUrl).contains(guild)) {
-				linkContainer.append(patreonUrl).append("\n");
-			}
+		List<UrlBean> ubList = urls.getGuildUrls(guild.getId());
+
+		for (UrlBean url : ubList){
+			linkContainer.append(url.getUrl()).append("\n");
 		}
+
 		if (linkContainer.length() == 0)
 			linkContainer.append("no links added");
 
-		synchronized (bot){
-			bot.setTitle("Links", "", guild);
-			bot.setDescription(linkContainer.toString(), guild);
-			bot.send(guild);
-		}
+		embed.setTitle("Links", "");
+		embed.setDescription(linkContainer.toString());
+
+		send(embed);
 	}
 }

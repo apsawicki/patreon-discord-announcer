@@ -1,6 +1,8 @@
 package PDA.commands;
 
-import PDA.DiscordBot;
+import PDA.jpa.Guilds;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * help discord bot command.
@@ -11,19 +13,21 @@ import PDA.DiscordBot;
  *
  */
 
-public class help extends GenericBotCommand {
+@Component
+public class help extends AbstractCommand {
 
-	/**
-	 * Prints out the list of commands available to be used by a user
-	 *
-	 * @param bot holds the reference to the singular {@link DiscordBot} object
-	 */
+	@Autowired
+	Guilds guilds;
+
+	// Prints out the list of commands available to be used by a user
 	@Override
-	public void execute(DiscordBot bot) {
-		synchronized (bot){
-			bot.setTitle("PDA Commands", null, guild);
-			bot.setDescription("/help\n/setchannel\n/addlink\n/removelink\n/showlinks\n/getpublicposts\n/getprivateposts", guild);
-			bot.send(guild);
-		}
+	public void execute() {
+		String commands = "!help\n!setchannel\n!addlink\n!removelink\n!showlinks\n!getpublicposts\n!getprivateposts\n!changeprefix";
+		String prefix = guilds.getGuild(guild.getId()).getPrefix();
+
+		embed.setTitle("PDA Commands", null);
+		embed.setDescription(commands.replaceAll("!", prefix));
+
+		send(embed);
 	}
 }

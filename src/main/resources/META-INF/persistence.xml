@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+    <persistence-unit name="pda">
+        <class>PDA.beans.GuildBean</class>
+        <class>PDA.beans.UrlBean</class>
+        <class>PDA.discord.DiscordBot</class>
+        <class>PDA.commands.CommandFactory</class>
+        <class>PDA.commands.help</class>
+        <class>PDA.discord.DiscordEventListener</class>
+    </persistence-unit>
+</persistence>
+
+<!-- "META-INF\spring.factories" was deleted-->
